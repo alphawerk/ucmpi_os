@@ -1,0 +1,105 @@
+<table id="utable" class="table table-hover">
+    <tbody>
+    <tr class="thead-light" style="word-break: keep-all;">
+        <th>Username/Email</th>
+        <th>Admin <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Access Admin settings and Diagnostic data"></i></th>
+        <th>Node-Red Read <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="User can read Node-Red flows"></i></th>
+        <th>Node-Red Write <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="User can edit Node-Red flows"></i></th>
+        <th>Remote Access <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="User can log in remotely"></i></th>
+        <th>UCM Trace <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="User can access UCM Trace Interface"></i></th>
+        <th>UCM Interactive <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="User can access UCM Command Interface"></i></th>
+        <th>Alert Emails <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="User will receive alert emails"></i></th>
+        <th>2FA <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Enable 2 factor authentication"></i></th>
+        <th>Alert on Login Failure <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Send email alert on login failure"></i></th>
+        <th>Alert on Login Success <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Send email alert on login success"></i></th>
+        <th style="min-width: 175px">Action</th>
+    </tr>
+    {{#each users}}
+
+        <tr>
+            <td style="word-break: keep-all;">
+                {{ name }}
+                <br>
+                <span id="{{ name }}_email">{{ email }}</span>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="Admin_{{ name }}" {{#if Admin }}checked{{/if}}>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="Node-Red-Read_{{ name }}" {{#if Node-Red-Read }}checked{{/if}}>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="Node-Red-Write_{{ name }}" {{#if Node-Red-Write }}checked{{/if}}>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="Remote-Access_{{ name }}" {{#if Remote-Access }}checked{{/if}}>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="UCM-Trace_{{ name }}" {{#if UCM-Trace }}checked{{/if}}>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="UCM-Interactive_{{ name }}" {{#if UCM-Interactive }}checked{{/if}}>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="Alert-Email_{{ name }}" {{#if Alert-Email }}checked{{/if}}>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="2FA_{{ name }}" {{#if 2FA }}checked{{/if}}>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="Alert-Login-Failure_{{ name }}" {{#if Alert-Login-Failure }}checked{{/if}}>
+            </td>
+            <td>
+                <input class="form-control" type="checkbox" id="Alert-Login-Success_{{ name }}" {{#if Alert-Login-Success }}checked{{/if}}>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <input type="button" id="{{ name }}_update" class="btn btn-primary" value="Update" onclick="user_update('{{ name }}')">
+                    <input type="button" id="{{ name }}_delete" class="btn btn-danger" value="Delete" onclick="user_delete('{{ name }}')">
+                </div>
+            </td>
+        </tr>
+    {{/each}}
+
+    <tr>
+        <td>
+            <input class="form-control" type="text" id="newusername" placeholder="Username">
+            <input class="form-control" type="text" id="newuserpassword" placeholder="Password">
+            <input class="form-control" type="text" id="newuseremail" placeholder="Email address">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="Admin_newuser">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="Node-Red-Read_newuser">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="Node-Red-Write_newuser">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="Remote-Access_newuser">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="UCM-Trace_newuser">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="UCM-Interactive_newuser">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="Alert-Email_newuser">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="2FA_newuser">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="Alert-Login-Failure_newuser">
+        </td>
+        <td>
+            <input class="form-control" type="checkbox" id="Alert-Login-Success_newuser">
+        </td>
+        <td>
+            <input type="button" id="addnewuser" class="btn btn-primary" value="Add User" onclick="addnewuser()">
+        </td>
+    </tr>
+    </tbody>
+</table>

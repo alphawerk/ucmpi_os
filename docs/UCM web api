@@ -1,0 +1,90 @@
+UCM Web API
+
+Web functions are on port :1080
+
+POST /api/generate:		Creates a new entry for the UCM on the server
+	variables				
+						installationname: Name of host - will be unique across all devices
+						ownername: 	string, Name of the owner				
+						owneremail: string, email of the owner	
+						ownerphone: string, phone
+						address1: string
+						address2: string
+						county: string,
+						country:  string
+						postcode: string
+						installername: string, name of installer 
+						installeremail:  string, email of installer
+						installerphone: string, phone of installer
+						betachk: 	boolean, needs to be checked, 
+						diagschk:  boolean, ok to send diagnostics
+						configchk: boolean, ok to send configuration & backup
+						nodechk: boolean, ok to send and backup node flows			
+
+GET /api/registration:	read reg data from server, return JSON object as generate
+POST /api/registration: update reg data to server, as per generate
+
+GET /api/reset?installationame=xx			
+						This will wipe the entire UCM so long as installationname matches the recorded installation name, as verified by the server		
+
+GET /api/userlist:		get list of users, returned as array of JSON objects as followus
+						username, string - will be unique
+						email address, string
+						node-red, boolean - can edit node-red flows
+						dashboard, boolean - can view / interact with dashboard
+						humserial, boolean - can access human serial protocol
+						trace, boolean - can access trace serial protocol
+						admin, boolean - can do user management, registration updates and turn on/off UCM/Eth emulation
+						remote, boolean - allowed remote access
+						
+POST /api/adduser		adds a new user, variables as userlist + password in plain text, username will be unique					
+POST /api/deluser		removes user identified by username						
+POST /api/edituser		same variables as userlist, will modify existing user
+POST /api/userpassword	will change password
+
+GET /api/listwebhook	returns an array of webhooks as JSON objects (id, url)
+GET /api/addwebhook		returns a json object with new webhook (id, url)
+POST /api/delwebhook	deletes a webhook with a given id
+
+GET /api/listmqtthook	returns an array of mqtthooks as JSON objects (id, path, username, password)
+GET /api/addmqtthook	returns a new json object with a new mqtthook (id, path, username, password)
+POST /api/delwebhook	deletes a mqtthook with a given id
+
+POST /api/login			username and password as variables, redirect to main page with session cookie set upon successful login, otherwise redirects to /login.html
+
+User flow
+
+Any navigation without a session cookie, or with an expired session cookie, with redirect them to
+
+/login.html
+
+/main.html		if there is a session cookie, and server key is set, will provide (ideally on tabs)
+
+			user management, 
+			webhook management, 
+			mqtt management, 
+			registration update and 
+			admin 
+				restart node-red
+				restart ucm
+				backup ucm
+				enable/disable UCM/Eth emulation
+				enable/disable HumSerial 
+				enable/disable trace
+				upload comfiguration file
+				set userid for comfort
+				full reset
+				
+			if no key, will redirect to
+			
+/setup.html which will capture data for initial registration on server, including key generation then redirect to /setup2.html
+
+/setup2.html will allow the user to load the comfiguration file and set the pin to login and then redirect to main
+
+
+
+						
+
+
+
+

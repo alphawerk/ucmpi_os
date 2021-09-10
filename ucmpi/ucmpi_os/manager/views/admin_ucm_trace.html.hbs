@@ -1,0 +1,52 @@
+{{#extend "base_layout.html"}}
+    {{#content "head" mode="append"}}
+    {{/content}}
+
+    {{#content "meta" mode="replace"}}
+        <title>UCM PI - Trace</title>
+        <meta name="description" content="UCM PI - Trace">
+    {{/content}}
+
+    {{#content "content"}}
+        <h1 class="h3 mb-3">Trace</h1>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Trace</h5>
+                    </div>
+                    <div class="card-body">
+                        <label class="form-check form-check-inline" for="trace">
+                            <input type="checkbox" class="form-check-input" id="trace">
+                            <span class="form-check-label">Trace</span>
+                        </label>
+                        <label class="form-check form-check-inline" for="debug">
+                            <input type="checkbox" class="form-check-input" id="debug">
+                            <span class="form-check-label">Debug</span>
+                        </label>
+                        <label class="form-check form-check-inline" for="autoscroll">
+                            <input type="checkbox" class="form-check-input" id="autoscroll">
+                            <span class="form-check-label">Autoscroll</span>
+                        </label>
+                        <input type="button" class="btn btn-primary  mb-2 mr-sm-2" id="textclear" value="Clear Contents">
+
+                        <textarea id="tracedebugtext" class="form-control" rows="20"></textarea>
+
+                        <br>
+
+                        <input type="text" name="command" class="form-control" placeholder="Cytech Serial Protocol Command">
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    {{/content}}
+
+    {{#content "foot" mode="append"}}
+        <script src="../static/js/adminDash.js"></script>
+    {{/content}}
+{{/extend}}

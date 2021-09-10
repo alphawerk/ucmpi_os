@@ -1,0 +1,124 @@
+{{#extend "base_layout.html"}}
+    {{#content "head" mode="append"}}
+    {{/content}}
+
+    {{#content "meta" mode="replace"}}
+        <title>UCM PI - System Info</title>
+        <meta name="description" content="UCM PI - System Info and Settings">
+    {{/content}}
+
+    {{#content "content"}}
+        <h1 class="h3 mb-3">UCM/Pi System Info and Settings</h1>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">System Info and Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        {{#embed "_sysInfoTable.html"}}
+                        {{/embed}}
+
+                        <input type="button" class="btn btn-warning" id="flush_logs" value="Flush Logs" disabled>
+                        <input type="button" class="btn btn-warning" id="enable_ssh" value="Enable SSH" disabled>
+                        <input type="button" class="btn btn-success" id="disable_ssh" value="Disable SSH" disabled><br/><br/>
+
+                        <label class="custom-control custom-checkbox" for="ucmeth">
+                            <input type="checkbox" class="custom-control-input" id="ucmeth">
+                            <span class="custom-control-label">UCM Eth Emulation [2001]</span>
+                        </label>
+                        <label class="custom-control custom-checkbox" for="ucmhuman">
+                            <input type="checkbox" class="custom-control-input" id="ucmhuman">
+                            <span class="custom-control-label">UCM Human Text Inferface [2002]</span>
+                        </label>
+                        <label class="custom-control custom-checkbox" for="ucmtrace">
+                            <input type="checkbox" class="custom-control-input" id="ucmtrace">
+                            <span class="custom-control-label">UCM Trace [2003]</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Change pi user password</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-inline">
+                            <label class="sr-only" for="pipassword">Change pi user password</label>
+                            <input type="text" id="pipassword" class="form-control mb-2 mr-sm-2" placeholder="New password">
+                            <input type="button" class="btn btn-danger mb-2" id="changepassword" value="Update" disabled>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Watchdog</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>The Pi gives out a heartbeat signal on the Output Pin, which the Comfort system watches. If the heartbeat fails, Comfort will reboot the Pi.</p>
+                        <table>
+                            <tr>
+                                <td class="text-right">Status:</td>
+                                <td id="watchdogstatus">Unknown</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Output Pin:</td>
+                                <td id="watchdogled">Unknown</td>
+                                <td class="text-right"><span data-toggle="tooltip" title="Should alternate High & Low."><i class="fa fa-info-circle"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Input Pin:</td>
+                                <td id="watchdoginput">Unknown</td>
+                                <td class="text-right"><span data-toggle="tooltip" title="Should be High unless rebooting."><i class="fa fa-info-circle"></i></span></td>
+                            </tr>
+                        </table>
+
+                        <form class="form-inline">
+                            <div class="btn-group btn-group-lg mb-3" role="group" aria-label="Large button group">
+                                <input type="button" class="btn btn-primary mb-2" id="watchdog_run" value="Run" disabled>
+                                <input type="button" class="btn btn-warning mb-2" id="watchdog_pause" value="Pause" disabled>
+                                <input type="button" class="btn btn-danger mb-2" id="watchdog_reboot" value="Reboot" disabled>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Execute Script</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class="form">
+                            <label class="form-label" for="remotescript">Location of script (URL)</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">https://uhai.alphawerk.co.uk/</span>
+                                </div>
+                                <input type="text" id="remotescript" class="form-control">
+                            </div>
+                            <input type="button" class="btn btn-danger mb-2" id="remotescriptgo" value="Run">
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    {{/content}}
+
+    {{#content "foot" mode="append"}}
+        <script src="../static/js/adminDash.js"></script>
+    {{/content}}
+{{/extend}}

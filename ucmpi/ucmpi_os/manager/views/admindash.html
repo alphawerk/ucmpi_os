@@ -1,0 +1,481 @@
+<html>
+  <head>
+  	<style>
+		table {
+		  border-collapse: collapse;
+		  border-spacing: 0;
+		  width: 100%;
+		  border: 1px solid #ddd;
+		}
+
+		/* Style table headers and table data */
+		th, td {
+		  font-size: small;
+		  font-family: Arial, Helvetica, sans-serif;	
+		  text-align: center;
+		  padding: 16px;
+		}
+
+		th:first-child, td:first-child {
+		  text-align: left;
+		}
+
+		/* Zebra-striped table rows */
+		tr:nth-child(even) {
+		  background-color: #f2f2f2
+		}  	
+  	</style>
+  	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>UCM/Pi Diagnostics</title>
+    <script src="../static/js/jquery-2.1.1.min.js">  </script>
+    <script>
+		var userrights = null;		    	
+    	var connection = null;
+      $(document).ready(function(){
+      		if (location.hostname!='uhai.alphawerk.co.uk') {
+				var links = '<a href="http://' + location.hostname + ':1880/">Node-Red</a><br/><a href="http://' + location.hostname + ':1880/ui/">Node-Red Dashboard</a>'
+				document.getElementById("links").innerHTML = links;
+			}
+      		// if user is running mozilla then use it's built-in WebSocket
+  			window.WebSocket = window.WebSocket || window.MozWebSocket;
+  			console.log("Hostname: " + window.location.host);
+  			var wslink = 'ws://' + window.location.host + '/ws';
+  			if (location.hostname ==='uhai.alphawerk.co.uk') {
+  				wslink = 'wss://' + window.location.host + '/ws';	
+  			}
+  			connection = new WebSocket(wslink);
+ 			connection.onopen = function () {
+ 				document.getElementById("websocketstatus").innerHTML = "Server Connected";
+ 			
+				$("#watchdog_run").click(function(){
+					console.log("Run Requested");
+					connection.send(JSON.stringify({'topic':'watchdog','payload':{'control':'run'}}));
+				});
+				$("#watchdog_pause").click(function(){
+					connection.send(JSON.stringify({'topic':'watchdog','payload':{'control':'pause'}}));
+				});
+				$("#watchdog_reboot").click(function(){
+					connection.send(JSON.stringify({'topic':'watchdog','payload':{'control':'reboot'}}));
+				});
+				$("#userbutton_push").click(function(){
+					connection.send(JSON.stringify({'topic':'functionbutton','payload':{'control':'tap'}}));
+				});
+				$("#userbutton_5").click(function(){
+					connection.send(JSON.stringify({'topic':'functionbutton','payload':{'control':'5sec'}}));
+				});
+				$("#userbutton_15").click(function(){
+					connection.send(JSON.stringify({'topic':'functionbutton','payload':{'control':'15sec'}}));
+				});
+				$("#userbutton_30").click(function(){
+					connection.send(JSON.stringify({'topic':'functionbutton','payload':{'control':'30sec'}}));
+				});
+				$("#changecomfortpin").click(function(){
+					connection.send(JSON.stringify({'topic':'updatepin','payload':{'data':$('#comfortpin').val()}}));
+					$('#comfortpin').val("");
+				});
+				$("#changefriendlyname").click(function(){
+					connection.send(JSON.stringify({'topic':'changefriendlyname','payload':{'friendlyname':$('#friendlyname').val()}}));
+				});
+				$("#remotescriptgo").click(function(){
+					connection.send(JSON.stringify({'topic':'remotescript','payload':{'remotescript':$('#remotescript').val()}}));
+				});
+				$("#enable_ssh").click(function(){
+					connection.send(JSON.stringify({'topic':'ssh','payload':{'control':'start'}}));
+				});
+				$("#disable_ssh").click(function(){
+					connection.send(JSON.stringify({'topic':'ssh','payload':{'control':'stop'}}));
+				});
+				$("#flush_logs").click(function(){
+					connection.send(JSON.stringify({'topic':'flush','payload':{'control':'flush'}}));
+				});
+				$("#changepassword").click(function(){
+					connection.send(JSON.stringify({'topic':'pipassword','payload':{'password':$('#pipassword').val()}}));
+				});
+				
+				
+				document.getElementById("watchdog_run").disabled = false;
+				document.getElementById("watchdog_pause").disabled = false;
+				document.getElementById("watchdog_reboot").disabled = false;
+				document.getElementById("userbutton_push").disabled = false;
+				document.getElementById("userbutton_5").disabled = false;
+				document.getElementById("userbutton_15").disabled = false;
+				document.getElementById("userbutton_30").disabled = false;
+				document.getElementById("changecomfortpin").disabled = false;
+				document.getElementById("flush_logs").disabled = false;
+				document.getElementById("enable_ssh").disabled = false;
+				document.getElementById("disable_ssh").disabled = false;
+				document.getElementById("changepassword").disabled = false;
+ 			}
+ 			connection.onerror = function(error) {
+				document.getElementById("websocketstatus").innerHTML = "Server Connection Lost....Retrying";
+ 				document.getElementById("watchdogled").innerHTML = "Output Pin: Unknown";
+ 				document.getElementById("serialnumber").innerHTML = "Serial Number:	Unknown";
+ 				document.getElementById("watchdogstatus").innerHTML = "Status:	Unknown";
+ 				document.getElementById("watchdog_run").disabled = true;
+				document.getElementById("watchdog_pause").disabled = true;
+				document.getElementById("watchdog_reboot").disabled = true;
+				document.getElementById("userbutton_push").disabled = true;
+				document.getElementById("userbutton_5").disabled = true;
+				document.getElementById("userbutton_15").disabled = true;
+				document.getElementById("userbutton_30").disabled = true;
+				document.getElementById("changecomfortpin").disabled = true;
+				document.getElementById("flush_logs").disabled = true;
+				document.getElementById("enable_ssh").disabled = true;
+				document.getElementById("disable_ssh").disabled = true;
+				document.getElementById("changepassword").disabled = true;
+ 			}
+ 			
+ 			connection.onmessage = function(message) {
+ 				console.log(message);
+ 				try {
+ 					var json = JSON.parse(message.data);
+ 				} catch (e) {
+ 					console.log("Invalid data from ws");
+ 					return;	
+ 				}
+ 				switch (json["topic"]) {
+ 					case "watchdog/pinout":
+ 						document.getElementById("watchdogled").innerHTML = "Output Pin: " + json["payload"]["status"];
+ 						break;
+ 					case "watchdog/warning":
+ 						document.getElementById("watchdoginput").innerHTML = "Input Pin: " + json["payload"]["status"];
+ 						break;
+ 					case "serialnumber":
+ 						document.getElementById("serialnumber").innerHTML = "Serial Number: " + json["payload"]["serialnumber"];
+ 						break;
+ 					case "watchdog":
+ 						document.getElementById("watchdogstatus").innerHTML = "Status: " + json["payload"]["status"];
+ 						break;
+ 					case "loadindex":
+ 						document.getElementById("loadindex").innerHTML = "Load Index: " + json["payload"]["status"];
+ 						break;
+ 					case "disk":
+ 						document.getElementById("disk").innerHTML = "Disk: " + json["payload"]["status"];
+ 						break;	
+ 					case "memory":
+ 						document.getElementById("memory").innerHTML = "Memory: " + json["payload"]["status"];
+ 						break;
+ 					case "uptime":
+ 						document.getElementById("uptime").innerHTML = "Uptime: " + json["payload"]["status"];
+ 						break;
+ 					case "ssh":
+ 						if (json["payload"]["status"]=="true") {		
+ 							document.getElementById("ssh").innerHTML = "SSH Service Enabled";
+ 						} else {
+ 							document.getElementById("ssh").innerHTML = "SSH Service Disabled";
+ 						}
+ 						break;	
+ 					case "tracetx":
+ 						$('#tracedebugtext').append("UCM TX:" + json["payload"]["status"] + "\r");
+ 						checkscroll();	
+ 						break;
+ 					case "tracerx":
+ 						$('#tracedebugtext').append("UCM RX:" + json["payload"]["status"] + "\r");
+ 						checkscroll();
+ 						break;
+ 					case "debug":
+ 						$('#tracedebugtext').append(json["payload"]["source"] + ":" + Date(json["payload"]["date"]) + ":" + json["payload"]["severity"] + ":" + json["payload"]["message"] + "\r");
+ 						checkscroll();	
+ 						break;
+ 					case "message":
+ 						alert(json["payload"]["status"]);
+ 						break;
+ 					case "userrights":
+ 						userrights = json["payload"];
+ 						break;
+ 					case "userlist":
+ 						updateuserstable(json["payload"]);
+ 						break
+ 					case "friendlyname":
+ 						if(json["payload"]["success"] == "true") {
+ 							document.getElementById("friendlyname").value = json["payload"]["friendlyname"];
+ 							document.getElementById("friendlyname").disabled = false;
+ 							document.getElementById("changefriendlyname").disabled = false;
+ 							document.getElementById("friendlynameerror").innerHTML = "Status: OK";
+
+ 							
+ 						} else {
+ 							document.getElementById("friendlynameerror").innerHTML = "Status: " + json["payload"]["error"];
+ 							document.getElementById("friendlyname").disabled = true;
+ 							document.getElementById("changefriendlyname").disabled = true;
+ 						}
+ 						break;
+ 					case "UCMEthNative":
+ 						if(json["payload"]["status"] == "started") {
+ 							document.getElementById("ucmeth").checked = true;			
+ 						} else if (json["payload"]["status"] == "stopped") {
+ 							document.getElementById("ucmeth").checked = false;		
+ 						}
+ 						break;
+ 					case "UCMEthText":
+ 						if(json["payload"]["status"] == "started") {
+ 							document.getElementById("ucmhuman").checked = true;			
+ 						} else if (json["payload"]["status"] == "stopped") {
+ 							document.getElementById("ucmhuman").checked = false;		
+ 						}
+ 						break;	
+ 					case "UCMEthTrace":
+ 						if(json["payload"]["status"] == "started") {
+ 							document.getElementById("ucmtrace").checked = true;			
+ 						} else if (json["payload"]["status"] == "stopped") {
+ 							document.getElementById("ucmtrace").checked = false;		
+ 						}
+ 						break;	
+ 					case "diags":
+ 						if(json["payload"]["status"] == "started") {
+ 							document.getElementById("diags").checked = true;			
+ 						} else if (json["payload"]["status"] == "stopped") {
+ 							document.getElementById("diags").checked = false;		
+ 						}
+ 						break;
+ 					case "backupcomf":
+ 						if(json["payload"]["status"] == "started") {
+ 							document.getElementById("backupcomf").checked = true;			
+ 						} else if (json["payload"]["status"] == "stopped") {
+ 							document.getElementById("backupcomf").checked = false;		
+ 						}
+ 						break;	
+ 					case "backupflow":
+ 						if(json["payload"]["status"] == "started") {
+ 							document.getElementById("backupflow").checked = true;			
+ 						} else if (json["payload"]["status"] == "stopped") {
+ 							document.getElementById("backupflow").checked = false;		
+ 						}
+ 						break;	
+ 					default:
+ 				}	
+ 			}
+ 			
+ 			$('#trace').click(function () {
+ 				if($('#trace').is(':Checked')) {
+ 					connection.send(JSON.stringify({'topic':'trace','payload':{'control':'true'}}));	
+ 				} else {
+ 					connection.send(JSON.stringify({'topic':'trace','payload':{'control':'false'}}));		
+ 				}
+ 			});
+ 			$('#debug').click(function () {
+ 				if($('#debug').is(':Checked')) {
+ 					connection.send(JSON.stringify({'topic':'debug','payload':{'control':'true'}}));	
+ 				} else {
+ 					connection.send(JSON.stringify({'topic':'debug','payload':{'control':'false'}}));		
+ 				}
+ 			});
+ 			$('#comfortfile').click(function () {
+ 				console.log('ComfortFile Clicked ' + $('#comfortfile').val())
+ 			});
+ 			
+ 			
+ 			$("#textclear").click(function(){
+ 				$('#tracedebugtext').val("");
+			});
+			
+			$('#ucmeth').click(function () {
+ 				if($('#ucmeth').is(':Checked')) {
+ 					connection.send(JSON.stringify({'topic':'UCMEthNative','payload':{'control':'start'}}));	
+ 				} else {
+ 					connection.send(JSON.stringify({'topic':'UCMEthNative','payload':{'control':'stop'}}));		
+ 				}
+ 			});
+ 			
+ 			$('#ucmhuman').click(function () {
+ 				if($('#ucmhuman').is(':Checked')) {
+ 					connection.send(JSON.stringify({'topic':'UCMEthText','payload':{'control':'start'}}));	
+ 				} else {
+ 					connection.send(JSON.stringify({'topic':'UCMEthText','payload':{'control':'stop'}}));		
+ 				}
+ 			});
+ 			
+ 			$('#ucmtrace').click(function () {
+ 				if($('#ucmtrace').is(':Checked')) {
+ 					connection.send(JSON.stringify({'topic':'UCMEthTrace','payload':{'control':'start'}}));	
+ 				} else {
+ 					connection.send(JSON.stringify({'topic':'UCMEthTrace','payload':{'control':'stop'}}));		
+ 				}
+ 			});
+ 			
+ 			$('#diags').click(function () {
+ 				if($('#diags').is(':Checked')) {
+ 					connection.send(JSON.stringify({'topic':'diags','payload':{'control':'start'}}));	
+ 				} else {
+ 					connection.send(JSON.stringify({'topic':'diags','payload':{'control':'stop'}}));		
+ 				}
+ 			});
+ 			
+ 			$('#backupcomf').click(function () {
+ 				if($('#backupcomf').is(':Checked')) {
+ 					connection.send(JSON.stringify({'topic':'backupcomf','payload':{'control':'start'}}));	
+ 				} else {
+ 					connection.send(JSON.stringify({'topic':'backupcomf','payload':{'control':'stop'}}));		
+ 				}
+ 			});
+ 			
+ 			$('#backupflow').click(function () {
+ 				if($('#backupflow').is(':Checked')) {
+ 					connection.send(JSON.stringify({'topic':'backupflow','payload':{'control':'start'}}));	
+ 				} else {
+ 					connection.send(JSON.stringify({'topic':'backupflow','payload':{'control':'stop'}}));		
+ 				}
+ 			});
+    });
+
+
+        function checkscroll() {
+            if ($('#autoscroll').is(':Checked')) {
+                $('#tracedebugtext').scrollTop($('#tracedebugtext')[0].scrollHeight);
+            }
+        }
+
+		function updateuserstable(userlist) {
+
+			var inner = '<table id="utable"><tr><th style="width:10%">username</th><th style="width:10%">email</th>';
+			for (var key in userrights){
+				if (userrights.hasOwnProperty(key))
+					inner += '<th style="">' + key + '</th>';
+			}
+			inner += '<th>Action</th>'
+			inner += '</tr>';
+
+			for (var i = 0; i < userlist.length; i++) {
+				var user = userlist[i]
+				inner += '<tr><td>' + user.name + '</td><td id="' + user.name +'_email">' + user.email + '</td>';
+				for (var key in userrights){
+					if (userrights.hasOwnProperty(key)) {
+						if (user.rights & userrights[key]) {
+							inner += '<td><input type="checkbox" id="' + key + '_' + user.name + '" checked></td>';
+						} else {
+							inner += '<td><input type="checkbox" id="' + key + '_' + user.name + '"></td>';
+						}
+					}
+				}
+				inner += '<td><input type="button" id="' + user.name + '_delete" value="delete" onclick="user_delete(\'' + user.name + '\')"><input type="button" id="' + user.name + '_update" value="update" onclick="user_update(\'' + user.name +'\')"></td>';
+				inner += '</tr>';
+			}
+
+			inner += '<tr><td><input type="text" id="newusername" value="username"><input type="text" id="newuserpassword" value="password"></td><td><input type="text" id="newuseremail" value="email address"></td>';
+			for (var key in userrights){
+				if (userrights.hasOwnProperty(key))
+					inner += '<td><input type="checkbox" id="' + key + '_newuser"></td>';
+			}
+			inner += '<td><input type="button" id="addnewuser" value="add" onclick="addnewuser()"></td>'
+			inner += '</tr>';
+
+			inner += '</table>';
+
+			document.getElementById("usertable").innerHTML = inner;
+		}
+
+		function user_delete(username) {
+			connection.send(JSON.stringify({'topic':'deleteuser','payload':username}));
+		}
+
+		function user_update(username) {
+			var user = {};
+			user['user'] = username;
+			user['email'] = document.getElementById(username+'_email').innerHTML;
+			var rights = 0;
+			for (var key in userrights) {
+				if ($('#' + key + '_' + username).is(':Checked'))
+					rights += userrights[key];
+			}
+			user['rights'] = rights;
+			connection.send(JSON.stringify({'topic':'updateuser','payload':user}));
+		}
+    
+		function addnewuser() {
+			var newuser = {};
+			newuser['user'] = $('#newusername').val();
+			newuser['password'] = $('#newuserpassword').val();
+			newuser['email'] = $('#newuseremail').val();
+			var rights = 0;
+			for (var key in userrights) {
+				if ($('#' + key + '_newuser').is(':Checked'))
+					rights += userrights[key];
+			}
+			newuser['rights'] = rights;
+			connection.send(JSON.stringify({'topic':'adduser','payload':newuser}));
+		}
+    
+    </script>
+  </head>
+  <body>
+    <h1>UCM/Pi Diagnostics</h1>
+    <div id="links"></div><br/>
+    <a href="/logout">Log Out</a> <a href="/password">Change Password</a>
+    <label id="websocketstatus">Server Connecting...</label><br/><br/>
+    <fieldset>
+    	<legend>System Info</legend>
+ 		<div>
+			<label id="serialnumber">Serial Number: Unknown</label><br/>
+			<label id="loadindex">Load Index: Unknown</label><br/>
+			<label id="disk">Disk: Unknown</label><br/>
+			<label id="memory">Memory: Unknown</label><br/>
+			<label id="uptime">Uptime: Unknown</label><br/>
+			<label id="ssh">SSH Service Enabled: Unknown</label><br/><br/>
+			<input type="button" id="flush_logs" value="Flush Logs" disabled>
+			<input type="button" id="enable_ssh" value="Enable SSH" disabled>
+			<input type="button" id="disable_ssh" value="Disable SSH" disabled><br/><br/>
+			Change linux pi user password <input type="text" id="pipassword">
+			<input type="button" id="changepassword" value="Update" disabled><br/><br/>
+			<input type="button" id="userbutton_push" value="Tap Function Button" disabled>
+			<input type="button" id="userbutton_5" value="Hold Function Button 5 secs" disabled>
+			<input type="button" id="userbutton_15" value="Hold Function Button 15 secs" disabled>
+			<input type="button" id="userbutton_30" value="Hold Function Button 30 secs" disabled><br/><br/>
+			<input type="checkbox" id="ucmeth"><label for="ucmeth">UCM Eth Emulation [2001]</label><br/> 
+			<input type="checkbox" id="ucmhuman"><label for="ucmhuman">UCM Human Text Inferface [2002]</label><br/>
+			<input type="checkbox" id="ucmtrace"><label for="ucmtrace">UCM Trace [2003]</label><br/>
+			<input type="checkbox" id="diags"><label for="diags">Send Diagnostic Data to alphawerk</label><br/> 
+			<input type="checkbox" id="backupcomf"><label for="backupcomf">Automatically backup Comfiguration changes to alphawerk</label><br/>
+			<input type="checkbox" id="backupflow"><label for="backupflow">Automatically backup Node-Red flows to alphawerk</label><br/>
+   	 	</div>
+    </fieldset>
+    <fieldset>
+   	 	<legend>WatchDog</legend>
+		<div>
+			<label id="watchdogstatus">Status: Unknown</label><br/>
+			<label id="watchdogled">Output Pin: Unknown</label><br/> 
+			<label id="watchdoginput">Input Pin: Unknown</label><br/><br/>
+			<input type="button" id="watchdog_run" value="Watchdog Run" disabled>
+			<input type="button" id="watchdog_pause" value="Watchdog hold high for pause" disabled>
+			<input type="button" id="watchdog_reboot" value="Watchdog hold low for reboot" disabled>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Execute Script</legend>
+		<div>
+			Location of script (URL) https://uhai.alphawerk.co.uk/<input type="text" id='remotescript' size="100"><br>
+			<input type="button" id="remotescriptgo" value="Execute Remote Script">	
+		</div>
+	</fieldset>
+	
+	
+	<fieldset>
+		<legend>Comfort Configuration</legend>
+		<form action="/api/comfigurator_upload" method="post" encType="multipart/form-data" target="dummyframe">
+		<input type="file" name="config" id="files" accept=".cclx" required>
+		<input type="submit" id="uploadcomfiguration" value="Upload Comfiguration File">		
+		</form>
+		Set UCM Login Pin <input type="text" name="comfortpin" id='comfortpin'><input type="button" id="changecomfortpin" value="Update" disabled>	
+	</fieldset>
+	<fieldset>
+		<legend>Cloud Services</legend>
+		<div id="friendlynameerror">Status: Polling...</div>
+		Friendly Name <input type="text" id='friendlyname' disabled><input type="button" id="changefriendlyname" value="Change Friendly Name" disabled><div id="friendlynameerror"></div>	
+	</fieldset>
+	<fieldset>
+		<legend>Users</legend>
+		<div id='usertable'></div>	
+	</fieldset>	
+	<fieldset>	
+		<legend>Trace</legend>
+		<div>
+			<input type="checkbox" id="trace"><label for="trace">Trace</label> 
+			<input type="checkbox" id="debug"><label for="debug">Debug</label>
+			<input type="checkbox" id="autoscroll" checked><label for="autoscroll">Autoscroll</label>
+			<input type="button" id="textclear" value="Clear Contents"></br>
+			<textarea id="tracedebugtext" rows="40" style="width:100%"></textarea></br>
+			Cytech Serial Protocol Command <input type="text" name="command">		
+		</div>
+	</fieldset>
+  </body>
+  <iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>	
+</html>

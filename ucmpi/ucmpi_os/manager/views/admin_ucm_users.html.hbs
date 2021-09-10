@@ -1,0 +1,32 @@
+{{#extend "base_layout.html"}}
+    {{#content "head" mode="append"}}
+    {{/content}}
+
+    {{#content "meta" mode="replace"}}
+        <title>UCM PI - Users</title>
+        <meta name="description" content="UCM PI - Users">
+    {{/content}}
+
+    {{#content "content"}}
+        <h1 class="h3 mb-3">Users</h1>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Users</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive-lg" id="user_table_div">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/content}}
+
+    {{#content "foot" mode="append"}}
+        <script src="../static/js/adminDash.js"></script>
+    {{/content}}
+{{/extend}}

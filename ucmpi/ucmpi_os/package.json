@@ -1,0 +1,30 @@
+{
+  "name": "alphawerk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "manager.js",
+  "dependencies": {
+    "bcrypt": "^2.0.1",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.3",
+    "express-fileupload": "^0.4.0",
+    "express-session": "^1.15.6",
+    "express-ws": "^4.0.0",
+    "fs-extra": "^7.0.0",
+    "memorystore": "^1.6.0",
+    "mqtt": "^2.18.0",
+    "pug": "^2.0.3",
+    "request": "^2.87.0",
+    "rpi-gpio": "^1.0.0",
+    "serialport": "^6.2.0",
+    "uid-safe": "^2.1.5",
+    "xml2js": "^0.4.19"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthew Brain",
+  "license": "LicenseRef-LICENSE"
+}

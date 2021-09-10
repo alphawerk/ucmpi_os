@@ -1,0 +1,61 @@
+{{#extend "base_layout.html"}}
+    {{#content "head" mode="append"}}
+    {{/content}}
+
+    {{#content "meta" mode="replace"}}
+        <title>UCM PI - Function Buttons</title>
+        <meta name="description" content="UCM PI - Function Buttons">
+    {{/content}}
+
+    {{#content "content"}}
+        <h1 class="h3 mb-3">Comfort</h1>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Function Buttons</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-inline">
+                            <div class="btn-group btn-group-lg mb-3" role="group" aria-label="Large button group">
+                                <input type="button" class="btn btn-primary mb-2" id="userbutton_push" value="Tap" disabled>
+                                <input type="button" class="btn btn-primary mb-2" id="userbutton_5" value="Hold 5s" disabled>
+                                <input type="button" class="btn btn-primary mb-2" id="userbutton_15" value="Hold 15s" disabled>
+                                <input type="button" class="btn btn-primary mb-2" id="userbutton_30" value="Hold 30s" disabled>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Comfort Configuration</h5>
+                    </div>
+                    <div class="card-body">
+                        <label>Comfiguration File</label>
+                        <form action="/api/comfigurator_upload" method="post" encType="multipart/form-data" target="dummyframe" class="form-inline">
+                            <input type="file" name="config" id="files" accept=".cclx">
+                            <input type="submit" class="btn btn-danger mb-2" id="uploadcomfiguration" value="Upload" >
+                        </form>
+
+                        <label class="form-label" for="comfortpin">Set UCM Login Pin</label>
+                        <form class="form-inline">
+                            <input type="text" name="comfortpin" id='comfortpin' class="form-control mb-2 mr-sm-2" placeholder="New password">
+                            <input type="button" class="btn btn-danger mb-2" id="changecomfortpin" value="Update" disabled>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    {{/content}}
+
+    {{#content "foot" mode="append"}}
+        <script src="../static/js/adminDash.js"></script>
+    {{/content}}
+{{/extend}}

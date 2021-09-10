@@ -1,0 +1,1708 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- Sample html file that corresponds to the 99-sample.js file              -->
+<!-- This creates and configures the onscreen elements of the node           -->
+
+<!-- If you use this as a template, update the copyright with your own name. -->
+
+
+<!-- Zone Event Node -->
+
+<!-- Fields -->
+<script type="text/x-red" data-template-name="cytech zone event">
+
+    <div class="form-row">
+        <label for="node-input-zone"><i class="fa fa-tag"></i> Zone</label>
+        <input type="text" id="node-input-zone" placeholder="Zone">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-event"><i class="fa fa-tag"></i> Event</label>
+        <select id="node-input-event" placeholder="Event">
+        	<option value="*">All</option>
+        	<option value="value">Value</option>
+        	<option value="bypass">Bypass</option>
+        	<option value="analogue_value">Analogue Value</option>
+        </select>
+    </div>
+
+	<div class="form-row">
+		<label for="node-input-trigger"><i class="fa fa-exclamation-circle"></i> Trigger</label>
+		<input type="checkbox" id="node-input-trigger" style="display:inline-block; width:22px; vertical-align:baseline;"> Trigger on new event</input>
+	</div>
+
+	<div class="form-row">
+		<label for="node-input-setvirtualinput"><i class="fa fa-exclamation-circle"></i> Set Virtual Input</label>
+		<input type="checkbox" id="node-input-setvirtualinput" style="display:inline-block; width:22px; vertical-align:baseline;"> Allow incoming event to set Virtual Input</input>	
+	</div>
+
+	<div class="form-row hidden" id="node-input-setvirtualinputparamrow">
+		<label for="node-input-setvirtualinputparam"><i class="fa fa-list"></i> Input = </label>
+		<span> msg.</span><input id="node-input-setvirtualinputparam" style="width:200px; margin-right:5px;">	    
+	</div>
+
+	<div class="form-row">
+		<label for="node-input-setbypass"><i class="fa fa-exclamation-circle"></i> Set Bypass</label>
+		<input type="checkbox" id="node-input-setbypass" style="display:inline-block; width:22px; vertical-align:baseline;"> Allow incoming event to set Bypass state</input>	
+	</div>
+
+	<div class="form-row hidden" id="node-input-setbypassparamrow">
+		<label for="node-input-setbypassparam"><i class="fa fa-list"></i> Bypass = </label>
+		<span> msg.</span><input id="node-input-setbypassparam" style="width:200px; margin-right:5px;">	    
+	</div>
+	
+	<div class="form-row hidden" id="node-input-inputtyperow">
+		<label for="node-input-inputtype"><i class="fa fa-plus-circle"></i> Append</label>
+		<select id="node-input-inputtype" style="width:200px; margin-right:5px;">
+			<option value="off"> Off</option>
+			<option value="passive"> Passive (current status)</option>
+            <option value="active"> Active (poll and wait)</option>
+        </select>
+    </div>
+    
+    <div class="form-row hidden" id="node-input-activewaitrow"> 
+    	<label for="node-input-activewait"><i class="fa fa-bell-slash"></i> Poll Timeout</label>   
+        <input id="node-input-activewait" style="width:20px; margin-right:5px;"> secs</input>
+	</div>
+
+	<div class="form-row">
+		<label for="node-input-outputtype"><i class="fa fa-list"></i> Type</label>
+		<select id="node-input-outputtype" style="margin-right:50px;">
+			<option value="detailed"> Detailed</option>
+            <option value="simplified"> Simple</option>
+        </select>       
+	</div>
+
+	<div class="form-row hidden" id="node-input-outputsimplifiedrow">
+		<label for="node-input-outputsimplifiedkey"><i class="fa fa-list"></i> Simple</label>
+		<span> msg.</span><input id="node-input-outputsimplifiedkey" style="width:120px; margin-right:5px;">
+	    <span>= </span><select id="node-input-outputsimplifiedvalue" style="width:120px; margin-right:50px;">
+	    	<option value="numeric"> Numeric</option>
+            <option value="boolean"> Boolean</option>
+            <option value="onoff"> On Off</option>
+            <option value="yesno"> Yes No</option>
+            <option value="openclosed"> Open Closed</option>          
+        </select>    
+	</div>
+	
+    <br/>
+    
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>    
+</script>
+
+
+<!-- Help Text -->
+<script type="text/x-red" data-help-name="cytech zone event">  
+   <p>Cytech Zone Event node. </p>
+   <p>An node representing 1 or All Comfort Input / Zone nodes.<p>
+   <p>The Zone dropdown allows a single or all zones to be selected<p>
+   <p>The Event dropdown allows Value, Bypass, Analogue Value or all elements to trigger events or output state upon polling<p>
+   <p>The Trigger option, if checked, will allow this node to start a flow when an event matching the nodes and/or events selected in the dropdowns is reported by Comfort<p>
+   <p>Enabling Set Virtual Input will set the zone input value to the parameter defined in Input (defaults to <code>msg.payload.value</code>) so long as the zone has virtual input enabled in Comfigurator<p>
+   <p>Enabling Set Bypass will set the zone bypass state the parameter defined in Bypass (defaults to  <code>msg.payload.bypass</code>).
+   <p>The Type dropdown enables Detailed or Simplified reporting, Simplified is only available when both a single zone and single event are defined. Simple reporting will output to the parameter defined in Simple, the output type being selected in the dropdown. 
+   <p>Detailed outputs contain a JSON object with the following parameters:<p>
+   <p><code>msg.payload.event</code> or <code>msg.payload.status</code> depending on whether it is an event generated by Comfort or status report from the Node object<p>
+   <ul>
+   <li><code>value</code> value of the element</li>
+	<li><code>notify</code> whether this is a change in value</li>
+	<li><code>timestamp</code> unix timestamp in milliseconds when the event occurred</li>
+	<li><code>previous</code> previous version of the object</li>
+	<li><code>type</code> type of metric, in this case "zone"</li>
+	<li><code>element</code> event type</li>
+	<li><code>index</code> index of the Comfort zone</li>
+	<li><code>zone</code> zone metadata:</li>
+	<ul>
+		<li><code>number</code>index of the Comfort zone</li>
+		<li><code>name</code>name of the comfort zone</li>
+		<li><code>zonetypename</code>name of the zone type</li>
+		<li><code>zoneword[1..4]</code>zone word [1..4]</li>
+		<li><code>entrypath</code>is this zone on the entry path</li>
+		<li><code>partition</code>partition of the zone</li>
+		<li><code>virtualinput</code>is this a virtual input</li>
+	</ul>
+   </ul>	
+   <p>
+   <p>Accepts <code>msg.payload.id</code> to identify the Comfort zone if 'All' is used when setting bypass or virtualinput<p>
+</script>
+
+<!-- Register Node Type -->
+<script type="text/javascript">
+    RED.nodes.registerType('cytech zone event',{
+        category: 'Cytech',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            zone: {value:"*", required:true},
+            event:{value:"*", required:true},
+            trigger:{value:true},
+            setvirtualinput: {value:false},
+            setvirtualinputparam: {value:"payload.value"},
+            setbypass: {value:false},
+            setbypassparam: {value:"payload.bypass"},
+            inputtype:{value:"passive"},
+            activewait:{value:5, required:true},
+            outputtype: {value:"detailed"},
+            outputsimplifiedvalue: {value:"boolean"},
+            outputsimplifiedkey:{value:"payload"} 
+        },
+        color:"#f3882e",
+        inputs:1,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        // set the icon (held in icons dir below where you save the node)
+        icon: "cytech.png",     // saved in  icons/myicon.png
+        label: function() {     // sets the default label contents
+            return this.name||this.zone||"Zone";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        inputLabel:'Poll & Set',
+        outputLabels: 'Event',
+        paletteLabel: "Zone",
+        oneditprepare: function () 
+        {
+        
+        	function adjustoutputtypelist() 
+        	{
+        		var temp = $('#node-input-outputtype').val();
+        		$('#node-input-outputtype').empty();
+        		$('#node-input-outputtype').append('<option value="detailed"> Detailed</option>');
+        		if (($('#node-input-zone').val()!="*") && ($('#node-input-event').val()!="*"))
+        		{
+        			$('#node-input-outputtype').append('<option value="simplified"> Simplified</option>');	
+        			$('#node-input-outputtype').val(temp);
+        		} else {
+        			$('#node-input-outputtype').val("detailed");
+        		}
+        		showsimplifiedoutput();
+        	}
+        
+        	function showsimplifiedoutput()
+        	{
+        		if ($('#node-input-outputtype').val() =="simplified")
+        		{
+        			$("#node-input-outputsimplifiedrow").show();
+        		} else {
+        			$("#node-input-outputsimplifiedrow").hide();	
+        		}
+        	}
+        
+        	function showactivewaitrow()
+        	{
+        		if ($('#node-input-event').val()=="*") {
+        			$('#node-input-inputtyperow').hide();
+        			$("#node-input-activewaitrow").hide();	
+        		} else {
+        			$('#node-input-inputtyperow').show();	
+					if ($('#node-input-inputtype').val()=="active") {
+						$("#node-input-activewaitrow").show();
+					} else {
+						$("#node-input-activewaitrow").hide();
+					}
+            	}
+            }
+        
+        	function searchandselectzoneid()
+        	{
+        		var current = $('#node-input-zone').val();
+        		var name = $('#node-input-name').val();
+        		$('#node-input-zone').replaceWith('<select id="node-input-zone"></select>');
+        		$('#node-input-zone').append('<option selected="selected" value="null">searching zones...</option>');
+        		$.get('cytech/config/elements', {type: "zones"})
+        		.done(function(data) {		
+        			var zones = JSON.parse(data);
+        			if(Object.keys(zones).length <=0)
+        			{
+        				RED.notify("No Zones Found","error");
+        			}
+					
+        			$('#node-input-zone').empty();
+        			$('#node-input-zone').append('<option value="*">All</option>');
+
+					var opts = [];
+        			for (id in zones)
+        			{
+        				opts.push({id:id,name:zones[id].name});	
+        			}
+        			console.log(opts);
+        			opts.sort((a,b) => (a.name > b.name)? 1 : ((b.name > a.name) ? -1 : 0));
+        			console.log(opts);
+        			opts.forEach(function(entry) {
+        				$('#node-input-zone').append('<option value="' + entry.id + '">' + entry.name + '</option>');
+        			});
+        			
+        			// set zone value
+        			$('#node-input-zone').val(current);
+        			$('#node-input-name').val(name);
+        			
+        		});	
+        	}
+        	
+        	var event = $('#node-input-event').val();
+        	searchandselectzoneid();
+        	
+        	$(document).on('change', '#node-input-zone', function()
+            {
+                var sensorName = $('#node-input-zone option:selected').text();
+                if(sensorName.length > 0)
+                {
+                    $('#node-input-name').val(sensorName);
+                }
+                adjustoutputtypelist();           
+            });
+            
+            $(document).on('change', '#node-input-event', function()
+            {
+            	adjustoutputtypelist();	
+            	showactivewaitrow();
+            });
+            
+            $(document).on('change', '#node-input-outputtype', function()
+            {
+            	showsimplifiedoutput();	
+            });
+            
+            $(document).on('change', '#node-input-inputtype', function()
+            {
+            	showactivewaitrow();
+            });    
+            
+            $(document).on('change', '#node-input-setbypass', function()
+            {
+            	if ($('#node-input-setbypass').is(':checked')) {
+
+            		$('#node-input-setbypassparamrow').show();
+            	} else {
+            		$('#node-input-setbypassparamrow').hide();
+            	}
+            
+            });
+            $(document).on('change', '#node-input-setvirtualinput', function()
+            {
+            	if ($('#node-input-setvirtualinput').is(':checked')) {
+
+            		$('#node-input-setvirtualinputparamrow').show();
+            	} else {
+            		$('#node-input-setvirtualinputparamrow').hide();
+            	}
+            
+            });      	
+        }
+       
+    });
+</script>
+
+
+<!-- Output Event Node -->
+
+<!-- Fields -->
+<script type="text/x-red" data-template-name="cytech output event">  
+    <div class="form-row">
+        <label for="node-input-output"><i class="fa fa-tag"></i> Output</label>
+        <input type="text" id="node-input-output" placeholder="Output">
+    </div>
+    
+    <div class="form-row">
+		<label for="node-input-trigger"><i class="fa fa-exclamation-circle"></i> Trigger</label>
+		<input type="checkbox" id="node-input-trigger" style="display:inline-block; width:22px; vertical-align:baseline;"> Trigger on new event</input>
+	</div>
+
+	<div class="form-row">
+		<label for="node-input-setvalue"><i class="fa fa-exclamation-circle"></i> Set Output</label>
+		<input type="checkbox" id="node-input-setvalue" style="display:inline-block; width:22px; vertical-align:baseline;"> Allow incoming event to set output state</input>	
+	</div>
+    
+    <div class="form-row hidden" id="node-input-setvalueparamrow">
+		<label for="node-input-setvalueparam"><i class="fa fa-list"></i> Output = </label>
+		<span> msg.</span><input id="node-input-setvalueparam" style="width:200px; margin-right:5px;">	    
+	</div>
+
+	<div class="form-row" id="node-input-inputtyperow">
+		<label for="node-input-inputtype"><i class="fa fa-plus-circle"></i> Append</label>
+		<select id="node-input-inputtype" style="width:200px; margin-right:5px;">
+			<option value="off"> Off</option>
+			<option value="passive"> Passive (current status)</option>
+            <option value="active"> Active (poll and wait)</option>
+        </select>
+    </div>    
+
+	<div class="form-row hidden" id="node-input-activewaitrow"> 
+    	<label for="node-input-activewait"><i class="fa fa-bell-slash"></i> Poll Timeout</label>   
+        <input id="node-input-activewait" style="width:20px; margin-right:5px;"> secs</input>
+	</div>
+
+    <div class="form-row">
+		<label for="node-input-outputtype"><i class="fa fa-list"></i> Type</label>
+		<select id="node-input-outputtype" style="margin-right:50px;">
+			<option value="detailed"> Detailed</option>
+            <option value="simplified"> Simple</option>
+        </select>       
+	</div>
+
+	<div class="form-row hidden" id="node-input-outputsimplifiedrow">
+		<label for="node-input-outputsimplifiedkey"><i class="fa fa-list"></i> Simple</label>
+		<span> msg.</span><input id="node-input-outputsimplifiedkey" style="width:120px; margin-right:5px;">
+	    <span>= </span><select id="node-input-outputsimplifiedvalue" style="width:120px; margin-right:50px;">
+	    	<option value="numeric"> Numeric</option>
+            <option value="boolean"> Boolean</option>
+            <option value="onoff"> On Off</option>
+            <option value="yesno"> Yes No</option>
+            <option value="openclosed"> Open Closed</option>          
+        </select>    
+	</div>
+	
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>    
+</script>
+
+
+<!-- Help Text -->
+<script type="text/x-red" data-help-name="cytech output event">  
+   <p>Cytech Output Event node. </p>
+   <p>An node representing 1 or All Comfort Outputs.<p>
+   <p>The Output dropdown allows a single all or outputs to be selected<p>
+   <p>The Trigger option, if checked, will allow this node to start a flow when an output event is reported by Comfort<p>
+   <p>Enabling Set Output will set the output state to the parameter defined in Output (defaults to <code>msg.payload</code>)<p>
+   <p>The Append dropdown defines what happens when in incoming event comes in, whether it will append passively or actively the Output state<p>
+   <p>The Type dropdown enables Detailed or Simplified reporting, Simplified is only available when a single Output is defined. Simple reporting will output to the parameter defined in Simple, the output type being selected in the dropdown. 
+   <p>Detailed outputs contain a JSON object with the following parameters:<p>
+   <p><code>msg.payload.event</code> or <code>msg.payload.status</code> depending on whether it is an event generated by Comfort or status report from the Node object<p>
+   <ul>
+   <li><code>value</code> value of the element</li>
+	<li><code>notify</code> whether this is a change in value</li>
+	<li><code>timestamp</code> unix timestamp in milliseconds when the event occurred</li>
+	<li><code>previous</code> previous version of the object</li>
+	<li><code>type</code> type of metric, in this case "output"</li>
+	<li><code>element</code> event type</li>
+	<li><code>index</code> index of the Comfort output</li>
+	<li><code>output</code> output metadata:</li>
+	<ul>
+		<li><code>number</code>index of the Comfort output</li>
+		<li><code>name</code>name of the Comfort output</li>
+	</ul>
+   </ul>	
+   <p>
+   <p>Accepts <code>msg.payload.id</code> to identify the Comfort output if 'All' is used when setting output state<p>
+</script>
+
+<!-- Register Node Type -->
+<script type="text/javascript">
+    RED.nodes.registerType('cytech output event',{
+        category: 'Cytech',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            output: {value:"*", required:true},
+            trigger:{value:true},
+            setvalue: {value:false},
+            setvalueparam: {value:"payload"},
+            inputtype:{value:"passive"},
+            activewait:{value:5, required:true},
+            outputtype: {value:"detailed"},
+            outputsimplifiedvalue: {value:"boolean"},
+            outputsimplifiedkey:{value:"payload"}
+        },
+        color:"#f3882e",
+        inputs:1,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        // set the icon (held in icons dir below where you save the node)
+        icon: "cytech.png",     // saved in  icons/myicon.png
+        label: function() {     // sets the default label contents
+            return this.name||this.output||"Output";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        inputLabel:'Poll & Set',
+        outputLabels: 'Event',
+        paletteLabel: "Output",
+        oneditprepare: function () 
+        {
+        
+       		function adjustoutputtypelist() 
+        	{
+        		var temp = $('#node-input-outputtype').val();
+        		$('#node-input-outputtype').empty();
+        		$('#node-input-outputtype').append('<option value="detailed"> Detailed</option>');
+        		if ($('#node-input-output').val()!="*") 
+        		{
+        			$('#node-input-outputtype').append('<option value="simplified"> Simplified</option>');	
+        			$('#node-input-outputtype').val(temp);
+        		} else {
+        			$('#node-input-outputtype').val("detailed");
+        		}
+        		showsimplifiedoutput();
+        	}
+        
+        	function showsimplifiedoutput()
+        	{
+        		if ($('#node-input-outputtype').val() =="simplified")
+        		{
+        			$("#node-input-outputsimplifiedrow").show();
+        		} else {
+        			$("#node-input-outputsimplifiedrow").hide();	
+        		}
+        	}
+        	
+        	function showactivewaitrow()
+        	{
+        		if ($('#node-input-event').val()=="*") {
+        			$('#node-input-inputtyperow').hide();
+        			$("#node-input-activewaitrow").hide();	
+        		} else {
+        			$('#node-input-inputtyperow').show();	
+					if ($('#node-input-inputtype').val()=="active") {
+						$("#node-input-activewaitrow").show();
+					} else {
+						$("#node-input-activewaitrow").hide();
+					}
+            	}
+            }
+        
+        
+        	function searchandselectoutputid()
+        	{
+        		var current = $('#node-input-output').val();
+        		var name = $('#node-input-name').val();
+        		$('#node-input-output').replaceWith('<select id="node-input-output"></select>');
+        		$('#node-input-output').append('<option selected="selected" value="null">searching outputs...</option>');
+        		$.get('cytech/config/elements', {type: "outputs"})
+        		.done(function(data) {		
+        			var outputs = JSON.parse(data);
+        			if(Object.keys(outputs).length <=0)
+        			{
+        				RED.notify("No Outputs Found","error");
+        			}
+					
+        			$('#node-input-output').empty();
+        			$('#node-input-output').append('<option value="*">All</option>');
+
+        			
+        			var opts = [];
+        			for (id in outputs)
+        			{
+        				opts.push({id:id,name:outputs[id].name});	
+        			}
+        			opts.sort((a,b) => (a.name > b.name)? 1 : ((b.name > a.name) ? -1 : 0));
+        			opts.forEach(function(entry) {
+        				$('#node-input-output').append('<option value="' + entry.id + '">' + entry.name + '</option>');
+        			});
+        			
+        			
+        			// set output value
+        			$('#node-input-output').val(current);
+        			$('#node-input-name').val(name);
+        			
+        		});	
+        	}
+        	       	
+        	searchandselectoutputid(); 
+        	      	
+        	$(document).on('change', '#node-input-output', function()
+            {
+                var sensorName = $('#node-input-output option:selected').text();
+                if(sensorName.length > 0)
+                {
+                    $('#node-input-name').val(sensorName);
+                }
+                adjustoutputtypelist();  
+            });	
+            
+            $(document).on('change', '#node-input-outputtype', function()
+            {
+            	showsimplifiedoutput();	
+            });
+                        
+            $(document).on('change', '#node-input-inputtype', function()
+            {
+            	showactivewaitrow();
+            });  
+            
+            $(document).on('change', '#node-input-setvalue', function()
+            {
+            	if ($('#node-input-setvalue').is(':checked')) {
+
+            		$('#node-input-setvalueparamrow').show();
+            	} else {
+            		$('#node-input-setvalueparamrow').hide();
+            	}
+            
+            });        
+        }
+    });
+</script>
+
+<!-- Flag Event Node -->
+
+<!-- Fields -->
+<script type="text/x-red" data-template-name="cytech flag event">  
+    <div class="form-row">
+        <label for="node-input-flag"><i class="fa fa-tag"></i> Flag</label>
+        <input type="text" id="node-input-flag" placeholder="Flag">
+    </div>
+    
+    <div class="form-row">
+		<label for="node-input-trigger"><i class="fa fa-exclamation-circle"></i> Trigger</label>
+		<input type="checkbox" id="node-input-trigger" style="display:inline-block; width:22px; vertical-align:baseline;"> Trigger on new event</input>
+	</div>
+
+	<div class="form-row">
+		<label for="node-input-setvalue"><i class="fa fa-exclamation-circle"></i> Set Flag</label>
+		<input type="checkbox" id="node-input-setvalue" style="display:inline-block; width:22px; vertical-align:baseline;"> Allow incoming event to set flag value</input>	
+	</div>
+    
+    <div class="form-row hidden" id="node-input-setvalueparamrow">
+		<label for="node-input-setvalueparam"><i class="fa fa-list"></i> Flag = </label>
+		<span> msg.</span><input id="node-input-setvalueparam" style="width:200px; margin-right:5px;">	    
+	</div>
+
+	<div class="form-row" id="node-input-inputtyperow">
+		<label for="node-input-inputtype"><i class="fa fa-plus-circle"></i> Append</label>
+		<select id="node-input-inputtype" style="width:200px; margin-right:5px;">
+			<option value="off"> Off</option>
+			<option value="passive"> Passive (current status)</option>
+            <option value="active"> Active (poll and wait)</option>
+        </select>
+    </div>    
+
+	<div class="form-row hidden" id="node-input-activewaitrow"> 
+    	<label for="node-input-activewait"><i class="fa fa-bell-slash"></i> Poll Timeout</label>   
+        <input id="node-input-activewait" style="width:20px; margin-right:5px;"> secs</input>
+	</div>
+
+    <div class="form-row">
+		<label for="node-input-outputtype"><i class="fa fa-list"></i> Type</label>
+		<select id="node-input-outputtype" style="margin-right:50px;">
+			<option value="detailed"> Detailed</option>
+            <option value="simplified"> Simple</option>
+        </select>       
+	</div>
+
+	<div class="form-row hidden" id="node-input-outputsimplifiedrow">
+		<label for="node-input-outputsimplifiedkey"><i class="fa fa-list"></i> Simple</label>
+		<span> msg.</span><input id="node-input-outputsimplifiedkey" style="width:120px; margin-right:5px;">
+	    <span>= </span><select id="node-input-outputsimplifiedvalue" style="width:120px; margin-right:50px;">
+	    	<option value="numeric"> Numeric</option>
+            <option value="boolean"> Boolean</option>
+            <option value="onoff"> On Off</option>
+            <option value="yesno"> Yes No</option>
+            <option value="openclosed"> Open Closed</option>          
+        </select>    
+	</div>
+	
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>    
+</script>
+
+
+<!-- Help Text -->
+<script type="text/x-red" data-help-name="cytech flag event">  
+   <p>Cytech Flag Event node. </p>
+   <p>An node representing 1 or All Comfort Flags.<p>
+   <p>The Flag dropdown allows a single or all flags to be selected<p>
+   <p>The Trigger option, if checked, will allow this node to start a flow when an flag event is reported by Comfort<p>
+   <p>Enabling Set Flag will set the flag state to the parameter defined in Flag (defaults to <code>msg.payload</code>)<p>
+   <p>The Append dropdown defines what happens when in incoming event comes in, whether it will append passively or actively the Flag state<p>
+   <p>The Type dropdown enables Detailed or Simplified reporting, Simplified is only available when a single Flag is defined. Simple reporting will output to the parameter defined in Simple, the output type being selected in the dropdown. 
+   <p>Detailed outputs contain a JSON object with the following parameters:<p>
+   <p><code>msg.payload.event</code> or <code>msg.payload.status</code> depending on whether it is an event generated by Comfort or status report from the Node object<p>
+   <ul>
+   <li><code>value</code> value of the element</li>
+	<li><code>notify</code> whether this is a change in value</li>
+	<li><code>timestamp</code> unix timestamp in milliseconds when the event occurred</li>
+	<li><code>previous</code> previous version of the object</li>
+	<li><code>type</code> type of metric, in this case "flag"</li>
+	<li><code>element</code> event type</li>
+	<li><code>index</code> index of the Comfort output</li>
+	<li><code>flag</code> flag metadata:</li>
+	<ul>
+		<li><code>number</code>index of the Comfort flag</li>
+		<li><code>name</code>name of the comfort flag</li>
+	</ul>
+   </ul>	
+   <p>
+   <p>Accepts <code>msg.payload.id</code> to identify the Comfort flag if 'All' is used when setting output state<p>
+</script>
+
+<!-- Register Node Type -->
+<script type="text/javascript">
+    RED.nodes.registerType('cytech flag event',{
+        category: 'Cytech',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            flag: {value:"*", required:true},
+            trigger:{value:true},
+            setvalue: {value:false},
+            setvalueparam: {value:"payload"},
+            inputtype:{value:"passive"},
+            activewait:{value:5, required:true},
+            outputtype: {value:"detailed"},
+            outputsimplifiedvalue: {value:"boolean"},
+            outputsimplifiedkey:{value:"payload"}
+        },
+        color:"#f3882e",
+        inputs:1,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        // set the icon (held in icons dir below where you save the node)
+        icon: "cytech.png",     // saved in  icons/myicon.png
+        label: function() {     // sets the default label contents
+            return this.name||this.output||"Flag";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        inputLabel:'Poll & Set',
+        outputLabels: 'Event',
+        paletteLabel: "Flag",
+        oneditprepare: function () 
+        {
+        
+       		function adjustoutputtypelist() 
+        	{
+        		var temp = $('#node-input-outputtype').val();
+        		$('#node-input-outputtype').empty();
+        		$('#node-input-outputtype').append('<option value="detailed"> Detailed</option>');
+        		if ($('#node-input-flag').val()!="*") 
+        		{
+        			$('#node-input-outputtype').append('<option value="simplified"> Simplified</option>');	
+        			$('#node-input-outputtype').val(temp);
+        		} else {
+        			$('#node-input-outputtype').val("detailed");
+        		}
+        		showsimplifiedoutput();
+        	}
+        
+        	function showsimplifiedoutput()
+        	{
+        		if ($('#node-input-outputtype').val() =="simplified")
+        		{
+        			$("#node-input-outputsimplifiedrow").show();
+        		} else {
+        			$("#node-input-outputsimplifiedrow").hide();	
+        		}
+        	}
+        	
+        	function showactivewaitrow()
+        	{
+        		
+				$('#node-input-inputtyperow').show();	
+				if ($('#node-input-inputtype').val()=="active") {
+					$("#node-input-activewaitrow").show();
+				} else {
+					$("#node-input-activewaitrow").hide();
+				}
+            	
+            }
+        
+        
+        	function searchandselectoutputid()
+        	{
+        		var current = $('#node-input-flag').val();
+        		var name = $('#node-input-name').val();
+        		$('#node-input-flag').replaceWith('<select id="node-input-flag"></select>');
+        		$('#node-input-flag').append('<option selected="selected" value="null">searching flags...</option>');
+        		$.get('cytech/config/elements', {type: "flags"})
+        		.done(function(data) {		
+        			var flags = JSON.parse(data);
+        			if(Object.keys(flags).length <=0)
+        			{
+        				RED.notify("No Flags Found","error");
+        			}
+					
+        			$('#node-input-flag').empty();
+        			$('#node-input-flag').append('<option value="*">All</option>');
+
+					var opts = [];
+        			for (id in flags)
+        			{
+        				opts.push({id:id,name:flags[id].name});	
+        			}
+        			opts.sort((a,b) => (a.name > b.name)? 1 : ((b.name > a.name) ? -1 : 0));
+        			opts.forEach(function(entry) {
+        				$('#node-input-flag').append('<option value="' + entry.id + '">' + entry.name + '</option>');
+        			});
+
+        			// set output value
+        			$('#node-input-flag').val(current);
+        			$('#node-input-name').val(name);
+        			
+        		});	
+        	}
+        	       	
+        	searchandselectoutputid(); 
+        	      	
+        	$(document).on('change', '#node-input-flag', function()
+            {
+                var sensorName = $('#node-input-flag option:selected').text();
+                if(sensorName.length > 0)
+                {
+                    $('#node-input-name').val(sensorName);
+                }
+                adjustoutputtypelist();  
+            });	
+            
+            $(document).on('change', '#node-input-outputtype', function()
+            {
+            	showsimplifiedoutput();	
+            });
+                        
+            $(document).on('change', '#node-input-inputtype', function()
+            {
+            	showactivewaitrow();
+            });  
+            
+            $(document).on('change', '#node-input-setvalue', function()
+            {
+            	if ($('#node-input-setvalue').is(':checked')) {
+
+            		$('#node-input-setvalueparamrow').show();
+            	} else {
+            		$('#node-input-setvalueparamrow').hide();
+            	}
+            
+            });        
+        }
+    });
+</script>
+
+<!-- Counter Event Node -->
+
+<!-- Fields -->
+<script type="text/x-red" data-template-name="cytech counter event">  
+    <div class="form-row">
+        <label for="node-input-counter"><i class="fa fa-tag"></i> Counter</label>
+        <input type="text" id="node-input-counter" placeholder="Flag">
+    </div>
+    
+    <div class="form-row">
+		<label for="node-input-trigger"><i class="fa fa-exclamation-circle"></i> Trigger</label>
+		<input type="checkbox" id="node-input-trigger" style="display:inline-block; width:22px; vertical-align:baseline;"> Trigger on new event</input>
+	</div>
+
+	<div class="form-row">
+		<label for="node-input-setvalue"><i class="fa fa-exclamation-circle"></i> Set Counter</label>
+		<input type="checkbox" id="node-input-setvalue" style="display:inline-block; width:22px; vertical-align:baseline;"> Allow incoming event to set counter value</input>	
+	</div class="form-row">
+    
+    <div class="form-row hidden" id="node-input-setvalueparamrow">
+		<label for="node-input-setvalueparam"><i class="fa fa-list"></i> Counter = </label>
+		<span> msg.</span><input id="node-input-setvalueparam" style="width:200px; margin-right:5px;">	    
+	</div>
+
+	<div class="form-row" id="node-input-inputtyperow">
+		<label for="node-input-inputtype"><i class="fa fa-plus-circle"></i> Append</label>
+		<select id="node-input-inputtype" style="width:200px; margin-right:5px;">
+			<option value="off"> Off</option>
+			<option value="passive"> Passive (current status)</option>
+            <option value="active"> Active (poll and wait)</option>
+        </select>
+    </div>    
+
+	<div class="form-row hidden" id="node-input-activewaitrow"> 
+    	<label for="node-input-activewait"><i class="fa fa-bell-slash"></i> Poll Timeout</label>   
+        <input id="node-input-activewait" style="width:20px; margin-right:5px;"> secs</input>
+	</div>
+
+    <div class="form-row">
+		<label for="node-input-outputtype"><i class="fa fa-list"></i> Type</label>
+		<select id="node-input-outputtype" style="margin-right:50px;">
+			<option value="detailed"> Detailed</option>
+            <option value="simplified"> Simple</option>
+        </select>       
+	</div>
+
+	<div class="form-row hidden" id="node-input-outputsimplifiedrow">
+		<label for="node-input-outputsimplifiedkey"><i class="fa fa-list"></i> Simple</label>
+		<span> msg.</span><input id="node-input-outputsimplifiedkey" style="width:200px; margin-right:5px;"> 
+	</div>
+		
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>    
+</script>
+
+
+<!-- Help Text -->
+<script type="text/x-red" data-help-name="cytech counter event">  
+   <p>Cytech Counter Event node. </p>
+   <p>An node representing 1 or All Comfort Counters.<p>
+   <p>The Flag dropdown allows a single or all counters to be selected<p>
+   <p>The Trigger option, if checked, will allow this node to start a flow when an counter event is reported by Comfort<p>
+   <p>Enabling Set Counter will set the counter state to the parameter defined in Counter (defaults to <code>msg.payload</code>)<p>
+   <p>The Append dropdown defines what happens when in incoming event comes in, whether it will append passively or actively the Counter state<p>
+   <p>The Type dropdown enables Detailed or Simplified reporting, Simplified is only available when a single Counter is defined. Simple reporting will output to the parameter defined in Simple, the output type a numeric value. 
+   <p>Detailed outputs contain a JSON object with the following parameters:<p>
+   <p><code>msg.payload.event</code> or <code>msg.payload.status</code> depending on whether it is an event generated by Comfort or status report from the Node object<p>
+   <ul>
+   <li><code>value</code> value of the element</li>
+	<li><code>notify</code> whether this is a change in value</li>
+	<li><code>timestamp</code> unix timestamp in milliseconds when the event occurred</li>
+	<li><code>previous</code> previous version of the object</li>
+	<li><code>type</code> type of metric, in this case "counter"</li>
+	<li><code>element</code> event type</li>
+	<li><code>index</code> index of the Comfort output</li>
+	<li><code>counter</code> counter metadata:</li>
+	<ul>
+		<li><code>number</code>index of the Comfort counter</li>
+		<li><code>name</code>name of the Comfort counter</li>
+	</ul>
+   </ul>	
+   <p>
+   <p>Accepts <code>msg.payload.id</code> to identify the Comfort counter if 'All' is used when setting output state<p>
+</script>
+
+<!-- Register Node Type -->
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('cytech counter event',{
+        category: 'Cytech',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            counter: {value:"*", required:true},
+            trigger:{value:true},
+            setvalue: {value:false},
+            setvalueparam: {value:"payload"},
+            inputtype:{value:"passive"},
+            activewait:{value:5, required:true},
+            outputtype: {value:"detailed"},
+            outputsimplifiedkey:{value:"payload"}
+        },
+        color:"#f3882e",
+        inputs:1,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        // set the icon (held in icons dir below where you save the node)
+        icon: "cytech.png",     // saved in  icons/myicon.png
+        label: function() {     // sets the default label contents
+            return this.name||this.output||"Counter";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        inputLabel:'Poll & Set',
+        outputLabels: 'Event',
+        paletteLabel: "Counter",
+        oneditprepare: function () 
+        {
+        
+       		function adjustoutputtypelist() 
+        	{
+        		var temp = $('#node-input-outputtype').val();
+        		$('#node-input-outputtype').empty();
+        		$('#node-input-outputtype').append('<option value="detailed"> Detailed</option>');
+        		if ($('#node-input-counter').val()!="*") 
+        		{
+        			$('#node-input-outputtype').append('<option value="simplified"> Simplified</option>');	
+        			$('#node-input-outputtype').val(temp);
+        		} else {
+        			$('#node-input-outputtype').val("detailed");
+        		}
+        		showsimplifiedoutput();
+        	}
+        
+        	function showsimplifiedoutput()
+        	{
+        		if ($('#node-input-outputtype').val() =="simplified")
+        		{
+        			$("#node-input-outputsimplifiedrow").show();
+        		} else {
+        			$("#node-input-outputsimplifiedrow").hide();	
+        		}
+        	}
+        	
+        	function showactivewaitrow()
+        	{
+        		
+				$('#node-input-inputtyperow').show();	
+				if ($('#node-input-inputtype').val()=="active") {
+					$("#node-input-activewaitrow").show();
+				} else {
+					$("#node-input-activewaitrow").hide();
+				}
+            	
+            }
+        
+        
+        	function searchandselectoutputid()
+        	{
+        		var current = $('#node-input-counter').val();
+        		var name = $('#node-input-name').val();
+        		$('#node-input-counter').replaceWith('<select id="node-input-counter"></select>');
+        		$('#node-input-counter').append('<option selected="selected" value="null">searching counters...</option>');
+        		$.get('cytech/config/elements', {type: "counters"})
+        		.done(function(data) {		
+        			var counters = JSON.parse(data);
+        			if(Object.keys(counters).length <=0)
+        			{
+        				RED.notify("No Counters Found","error");
+        			}
+					
+        			$('#node-input-counter').empty();
+        			$('#node-input-counter').append('<option value="*">All</option>');
+
+					var opts = [];
+        			for (id in counters)
+        			{
+        				opts.push({id:id,name:counters[id].name});	
+        			}
+        			opts.sort((a,b) => (a.name > b.name)? 1 : ((b.name > a.name) ? -1 : 0));
+        			opts.forEach(function(entry) {
+        				$('#node-input-counter').append('<option value="' + entry.id + '">' + entry.name + '</option>');
+        			});
+
+        			// set output value
+        			$('#node-input-counter').val(current);
+        			$('#node-input-name').val(name);
+        			
+        		});	
+        	}
+        	       	
+        	searchandselectoutputid(); 
+        	      	
+        	$(document).on('change', '#node-input-counter', function()
+            {
+                var sensorName = $('#node-input-counter option:selected').text();
+                if(sensorName.length > 0)
+                {
+                    $('#node-input-name').val(sensorName);
+                }
+                adjustoutputtypelist();  
+            });	
+            
+            $(document).on('change', '#node-input-outputtype', function()
+            {
+            	showsimplifiedoutput();	
+            });
+                        
+            $(document).on('change', '#node-input-inputtype', function()
+            {
+            	showactivewaitrow();
+            });  
+            
+            $(document).on('change', '#node-input-setvalue', function()
+            {
+            	if ($('#node-input-setvalue').is(':checked')) {
+
+            		$('#node-input-setvalueparamrow').show();
+            	} else {
+            		$('#node-input-setvalueparamrow').hide();
+            	}
+            
+            });        
+        }
+    });
+</script>
+
+<!-- Sensor Event Node -->
+
+<!-- Fields -->
+<script type="text/x-red" data-template-name="cytech sensor event">  
+    <div class="form-row">
+        <label for="node-input-sensor"><i class="fa fa-tag"></i> Sensor</label>
+        <input type="text" id="node-input-sensor" placeholder="Sensor">
+    </div>
+    
+    <div class="form-row">
+		<label for="node-input-trigger"><i class="fa fa-exclamation-circle"></i> Trigger</label>
+		<input type="checkbox" id="node-input-trigger" style="display:inline-block; width:22px; vertical-align:baseline;"> Trigger on new event</input>
+	</div>
+
+	<div class="form-row">
+		<label for="node-input-setvalue"><i class="fa fa-exclamation-circle"></i> Set Sensor</label>
+		<input type="checkbox" id="node-input-setvalue" style="display:inline-block; width:22px; vertical-align:baseline;"> Allow incoming event to set sensor value</input>	
+	</div class="form-row">
+    
+    <div class="form-row hidden" id="node-input-setvalueparamrow">
+		<label for="node-input-setvalueparam"><i class="fa fa-list"></i> Sensor = </label>
+		<span> msg.</span><input id="node-input-setvalueparam" style="width:200px; margin-right:5px;">	    
+	</div>
+
+	<div class="form-row" id="node-input-inputtyperow">
+		<label for="node-input-inputtype"><i class="fa fa-plus-circle"></i> Append</label>
+		<select id="node-input-inputtype" style="width:200px; margin-right:5px;">
+			<option value="off"> Off</option>
+			<option value="passive"> Passive (current status)</option>
+            <option value="active"> Active (poll and wait)</option>
+        </select>
+    </div>    
+
+	<div class="form-row hidden" id="node-input-activewaitrow"> 
+    	<label for="node-input-activewait"><i class="fa fa-bell-slash"></i> Poll Timeout</label>   
+        <input id="node-input-activewait" style="width:20px; margin-right:5px;"> secs</input>
+	</div>
+
+    <div class="form-row">
+		<label for="node-input-outputtype"><i class="fa fa-list"></i> Type</label>
+		<select id="node-input-outputtype" style="margin-right:50px;">
+			<option value="detailed"> Detailed</option>
+            <option value="simplified"> Simple</option>
+        </select>       
+	</div>
+
+	<div class="form-row hidden" id="node-input-outputsimplifiedrow">
+		<label for="node-input-outputsimplifiedkey"><i class="fa fa-list"></i> Simple</label>
+		<span> msg.</span><input id="node-input-outputsimplifiedkey" style="width:200px; margin-right:5px;"> 
+	</div>
+		
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>    
+</script>
+
+
+<!-- Help Text -->
+<script type="text/x-red" data-help-name="cytech sensor event">  
+   <p>Cytech Sensor Event node. </p>
+  <p>An node representing 1 or All Comfort Sensors.<p>
+   <p>The Sensor dropdown allows a single or all sensors to be selected<p>
+   <p>The Trigger option, if checked, will allow this node to start a flow when a sensor event is reported by Comfort<p>
+   <p>Enabling Set Sensor will set the sensor state to the parameter defined in Sensor (defaults to <code>msg.payload</code>)<p>
+   <p>The Append dropdown defines what happens when in incoming event comes in, whether it will append passively or actively the Sensor state<p>
+   <p>The Type dropdown enables Detailed or Simplified reporting, Simplified is only available when a single Sensor is defined. Simple reporting will output to the parameter defined in Simple, the output type a numeric value. 
+   <p>Detailed outputs contain a JSON object with the following parameters:<p>
+   <p><code>msg.payload.event</code> or <code>msg.payload.status</code> depending on whether it is an event generated by Comfort or status report from the Node object<p>
+   <ul>
+   <li><code>value</code> value of the element</li>
+	<li><code>notify</code> whether this is a change in value</li>
+	<li><code>timestamp</code> unix timestamp in milliseconds when the event occurred</li>
+	<li><code>previous</code> previous version of the object</li>
+	<li><code>type</code> type of metric, in this case "sensor"</li>
+	<li><code>element</code> event type</li>
+	<li><code>index</code> index of the Comfort sensor</li>
+	<li><code>counter</code> counter metadata:</li>
+	<ul>
+		<li><code>number</code>index of the Comfort sensor</li>
+		<li><code>name</code>name of the Comfort sensor</li>
+	</ul>
+   </ul>	
+   <p>
+   <p>Accepts <code>msg.payload.id</code> to identify the Comfort sensor if 'All' is used when setting output state<p>
+</script>
+
+<!-- Register Node Type -->
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('cytech sensor event',{
+        category: 'Cytech',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            sensor: {value:"*", required:true},
+            trigger:{value:true},
+            setvalue: {value:false},
+            setvalueparam: {value:"payload"},
+            inputtype:{value:"passive"},
+            activewait:{value:5, required:true},
+            outputtype: {value:"detailed"},
+            outputsimplifiedkey:{value:"payload"}
+        },
+        color:"#f3882e",
+        inputs:1,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        // set the icon (held in icons dir below where you save the node)
+        icon: "cytech.png",     // saved in  icons/myicon.png
+        label: function() {     // sets the default label contents
+            return this.name||this.sensor||"Sensor";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        inputLabel:'Poll & Set',
+        outputLabels: 'Event',
+        paletteLabel: "Sensor",
+        oneditprepare: function () 
+        {
+        
+       		function adjustoutputtypelist() 
+        	{
+        		var temp = $('#node-input-outputtype').val();
+        		$('#node-input-outputtype').empty();
+        		$('#node-input-outputtype').append('<option value="detailed"> Detailed</option>');
+        		if ($('#node-input-sensor').val()!="*") 
+        		{
+        			$('#node-input-outputtype').append('<option value="simplified"> Simplified</option>');	
+        			$('#node-input-outputtype').val(temp);
+        		} else {
+        			$('#node-input-outputtype').val("detailed");
+        		}
+        		showsimplifiedoutput();
+        	}
+        
+        	function showsimplifiedoutput()
+        	{
+        		if ($('#node-input-outputtype').val() =="simplified")
+        		{
+        			$("#node-input-outputsimplifiedrow").show();
+        		} else {
+        			$("#node-input-outputsimplifiedrow").hide();	
+        		}
+        	}
+        	
+        	function showactivewaitrow()
+        	{
+        		
+				$('#node-input-inputtyperow').show();	
+				if ($('#node-input-inputtype').val()=="active") {
+					$("#node-input-activewaitrow").show();
+				} else {
+					$("#node-input-activewaitrow").hide();
+				}
+            	
+            }
+        
+        
+        	function searchandselectoutputid()
+        	{
+        		var current = $('#node-input-sensor').val();
+        		var name = $('#node-input-name').val();
+        		$('#node-input-sensor').replaceWith('<select id="node-input-sensor"></select>');
+        		$('#node-input-sensor').append('<option selected="selected" value="null">searching sensors...</option>');
+        		$.get('cytech/config/elements', {type: "sensors"})
+        		.done(function(data) {		
+        			var sensors = JSON.parse(data);
+        			if(Object.keys(sensors).length <=0)
+        			{
+        				RED.notify("No Sensors Found","error");
+        			}
+					
+        			$('#node-input-sensor').empty();
+        			$('#node-input-sensor').append('<option value="*">All</option>');
+
+					var opts = [];
+        			for (id in sensors)
+        			{
+        				opts.push({id:id,name:sensors[id].name});	
+        			}
+        			opts.sort((a,b) => (a.name > b.name)? 1 : ((b.name > a.name) ? -1 : 0));
+        			opts.forEach(function(entry) {
+        				$('#node-input-sensor').append('<option value="' + entry.id + '">' + entry.name + '</option>');
+        			});
+
+        			// set output value
+        			$('#node-input-sensor').val(current);
+        			$('#node-input-name').val(name);
+        			
+        		});	
+        	}
+        	       	
+        	searchandselectoutputid(); 
+        	      	
+        	$(document).on('change', '#node-input-sensor', function()
+            {
+                var sensorName = $('#node-input-sensor option:selected').text();
+                if(sensorName.length > 0)
+                {
+                    $('#node-input-name').val(sensorName);
+                }
+                adjustoutputtypelist();  
+            });	
+            
+            $(document).on('change', '#node-input-outputtype', function()
+            {
+            	showsimplifiedoutput();	
+            });
+                        
+            $(document).on('change', '#node-input-inputtype', function()
+            {
+            	showactivewaitrow();
+            });  
+            
+            $(document).on('change', '#node-input-setvalue', function()
+            {
+            	if ($('#node-input-setvalue').is(':checked')) {
+            		$('#node-input-setvalueparamrow').show();
+            	} else {
+            		$('#node-input-setvalueparamrow').hide();
+            	}
+            
+            });        
+        }
+    });
+</script>
+
+
+
+<!-- Alarm Mode Event Node -->
+
+<!-- Fields -->
+<script type="text/x-red" data-template-name="cytech alarm mode event">  
+    
+    <div class="form-row">
+		<label for="node-input-trigger"><i class="fa fa-exclamation-circle"></i> Trigger</label>
+		<input type="checkbox" id="node-input-trigger" style="display:inline-block; width:22px; vertical-align:baseline;"> Trigger on new event</input>
+	</div>
+
+	<div class="form-row">
+		<label for="node-input-setmode"><i class="fa fa-exclamation-circle"></i> Set Alarm</label>
+		<input type="checkbox" id="node-input-setmode" style="display:inline-block; width:22px; vertical-align:baseline;"> Allow incoming event to request Alarm Mode</input>	
+	</div class="form-row">
+    
+    <div class="form-row hidden" id="node-input-setmodeparamrow">
+		<label for="node-input-setmodeparam"><i class="fa fa-list"></i> Mode = </label>
+		<span> msg.</span><input id="node-input-setmodeparam" style="width:120px; margin-right:5px;">
+		<span>= </span><select id="node-input-setmodevalue" style="width:120px; margin-right:50px;">
+	    	<option value="cytechtext"> Cytech Text</option>
+            <option value="cytechnumeric"> Cytech Numeric</option>
+            <option value="homekittext"> Homekit Text</option>
+            <option value="homekitnumeric"> Homekit Numeric</option>         
+        </select>    			    
+	</div>
+
+	<div class="form-row hidden" id="node-input-setpassparamrow">
+		<label for="node-input-setpassparam"><i class="fa fa-list"></i> Passcode = </label>
+		<span> msg.</span><input id="node-input-setpassparam" style="width:120px; margin-right:5px;">
+		<span>= </span><input id="node-input-setpassvalue" style="width:120px; margin-right:50px;">  			    
+	</div>
+
+	<div class="form-row" id="node-input-inputtyperow">
+		<label for="node-input-inputtype"><i class="fa fa-plus-circle"></i> Append</label>
+		<select id="node-input-inputtype" style="width:200px; margin-right:5px;">
+			<option value="off"> Off</option>
+			<option value="passive"> Passive (current status)</option>
+            <option value="active"> Active (poll and wait)</option>
+        </select>
+    </div>    
+
+	<div class="form-row hidden" id="node-input-activewaitrow"> 
+    	<label for="node-input-activewait"><i class="fa fa-bell-slash"></i> Poll Timeout</label>   
+        <input id="node-input-activewait" style="width:20px; margin-right:5px;"> secs</input>
+	</div>
+
+    <div class="form-row">
+		<label for="node-input-outputtype"><i class="fa fa-list"></i> Type</label>
+		<select id="node-input-outputtype" style="margin-right:50px;">
+			<option value="detailed"> Detailed</option>
+            <option value="simplified"> Simple</option>
+        </select>       
+	</div>
+
+	<div class="form-row hidden" id="node-input-outputsimplifiedrow">
+		<label for="node-input-outputsimplifiedkey"><i class="fa fa-list"></i> Simple</label>
+		<span> msg.</span><input id="node-input-outputsimplifiedkey" style="width:120px; margin-right:5px;">
+		<span>= </span><select id="node-input-outputmodevalue" style="width:120px; margin-right:50px;">
+	    	<option value="cytechtext"> Cytech Text</option>
+            <option value="cytechnumeric"> Cytech Numeric</option>
+            <option value="homekittext"> Homekit Text</option>
+            <option value="homekitnumeric"> Homekit Numeric</option>         
+        </select>     
+	</div>
+		
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>    
+</script>
+
+
+<!-- Help Text -->
+<script type="text/x-red" data-help-name="cytech alarm mode event">  
+   <p>Cytech Alarm Mode Event node. </p>
+	<p>An node representing the Comfort Alarm Mode.<p>
+   <p>The Trigger option, if checked, will allow this node to start a flow when an Alarm Mode change event is reported by Comfort<p>
+   <p>Enabling Set Alarm will set the Alarm Mode state to the parameter defined in Mode (defaults to <code>msg.payload.mode</code>) using the passcode defined in <code>msg.payload.passcode</code>. 4 Mode types are available <code>Cytech Text, Cytech Numeric, Homekit Text, Homekit Numeric</code> which equate to <code>[off,away,night,day,vacation],[0,1,2,3,4],[off, away, night, home],[3,2,1,0]</code> in that order. Homekit does not support <code>Vacation</code> so any use of vacation will need to be parsed by the user<p>
+   <p>The Append dropdown defines what happens when in incoming event comes in, whether it will append passively or actively the Counter state<p>
+   <p>The Type dropdown enables Detailed or Simplified reporting. Simple reporting will output to the parameter defined in Simple, the output type defined as above. 
+   <p>Detailed outputs contain a JSON object with the following parameters:<p>
+   <p><code>msg.payload.event</code> or <code>msg.payload.status</code> depending on whether it is an event generated by Comfort or status report from the Node object<p>
+   <ul>
+   <li><code>status</code> status of the alarm [off, away, night, day, vacation, arming, arming waiting on zone, entry delay, exit delay]</li>
+   	<li><code>source</code> the source of the change [user, zone]</li>
+   	<li><code>user/zone</code> the id of the source of the change</li>
+	<li><code>notify</code> whether this is a change in value</li>
+	<li><code>timestamp</code> unix timestamp in milliseconds when the event occurred</li>
+	<li><code>previous</code> previous version of the object</li>
+	<li><code>type</code> type of metric, in this case "alarm"</li>
+	<li><code>element</code> event type</li>
+	<li><code>index</code> index of the alarm object</li>
+   </ul>	
+   <p>
+</script>
+
+<!-- Register Node Type -->
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('cytech alarm mode event',{
+        category: 'Cytech',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            trigger:{value:true},
+            setmode: {value:false},
+            setmodeparam: {value:"payload.mode"},
+            setmodevalue: {value:"cytechtext"},
+            setpassparam: {value:"payload.passcode"},
+            setpassvalue: {value:"1234"},
+            inputtype:{value:"passive"},
+            activewait:{value:5, required:true},
+            outputtype: {value:"detailed"},
+            outputsimplifiedkey:{value:"payload"},
+            outputmodevalue:{value:"cytechtext"}
+        },
+        color:"#f3882e",
+        inputs:1,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        // set the icon (held in icons dir below where you save the node)
+        icon: "cytech.png",     // saved in  icons/myicon.png
+        label: function() {     // sets the default label contents
+            return this.name||"Alarm Mode";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        inputLabel:'Poll & Set',
+        outputLabels: 'Event',
+        paletteLabel: "Alarm Mode",
+        oneditprepare: function () 
+        {
+        
+       		function adjustoutputtypelist() 
+        	{
+        		var temp = $('#node-input-outputtype').val();
+        		$('#node-input-outputtype').empty();
+        		$('#node-input-outputtype').append('<option value="detailed"> Detailed</option>');
+        		if ($('#node-input-counter').val()!="*") 
+        		{
+        			$('#node-input-outputtype').append('<option value="simplified"> Simplified</option>');	
+        			$('#node-input-outputtype').val(temp);
+        		} else {
+        			$('#node-input-outputtype').val("detailed");
+        		}
+        		showsimplifiedoutput();
+        	}
+        
+        	function showsimplifiedoutput()
+        	{
+        		if ($('#node-input-outputtype').val() =="simplified")
+        		{
+        			$("#node-input-outputsimplifiedrow").show();
+        		} else {
+        			$("#node-input-outputsimplifiedrow").hide();	
+        		}
+        	}
+        	
+        	function showactivewaitrow()
+        	{
+        		
+				$('#node-input-inputtyperow').show();	
+				if ($('#node-input-inputtype').val()=="active") {
+					$("#node-input-activewaitrow").show();
+				} else {
+					$("#node-input-activewaitrow").hide();
+				}
+            	
+            }
+
+            $(document).on('change', '#node-input-outputtype', function()
+            {
+            	showsimplifiedoutput();	
+            });
+                        
+            $(document).on('change', '#node-input-inputtype', function()
+            {
+            	showactivewaitrow();
+            });  
+            
+            $(document).on('change', '#node-input-setmode', function()
+            {
+            	if ($('#node-input-setmode').is(':checked')) {
+            		$('#node-input-setmodeparamrow').show();
+            		$('#node-input-setpassparamrow').show();
+            		
+            	} else {
+            		$('#node-input-setmodeparamrow').hide();
+            		$('#node-input-setpassparamrow').hide();
+            	}
+            
+            });        
+        }
+    });
+    
+    
+ </script>   
+
+
+<!-- Alarm Status Node -->
+
+<!-- Fields -->
+<script type="text/x-red" data-template-name="cytech alarm status event">  
+    
+    <div class="form-row">
+		<label for="node-input-trigger"><i class="fa fa-exclamation-circle"></i> Trigger</label>
+		<input type="checkbox" id="node-input-trigger" style="display:inline-block; width:22px; vertical-align:baseline;"> Trigger on new event</input>
+	</div>
+    
+	<div class="form-row" id="node-input-inputtyperow">
+		<label for="node-input-inputtype"><i class="fa fa-plus-circle"></i> Append</label>
+		<select id="node-input-inputtype" style="width:200px; margin-right:5px;">
+			<option value="off"> Off</option>
+			<option value="passive"> Passive (current status)</option>
+            <option value="active"> Active (poll and wait)</option>
+        </select>
+    </div>    
+
+	<div class="form-row hidden" id="node-input-activewaitrow"> 
+    	<label for="node-input-activewait"><i class="fa fa-bell-slash"></i> Poll Timeout</label>   
+        <input id="node-input-activewait" style="width:20px; margin-right:5px;"> secs</input>
+	</div>
+
+    <div class="form-row">
+		<label for="node-input-outputtype"><i class="fa fa-list"></i> Type</label>
+		<select id="node-input-outputtype" style="margin-right:50px;">
+			<option value="detailed"> Detailed</option>
+            <option value="simplified"> Simple</option>
+        </select>       
+	</div>
+		
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>    
+</script>
+
+
+<!-- Help Text -->
+<script type="text/x-red" data-help-name="cytech alarm status event">  
+   <p>Cytech ALarm Status Event node. </p>
+   <p>An node representing the Comfort Alarm Status<p>
+   <p>The Trigger option, if checked, will allow this node to start a flow when an alarm status event is reported by Comfort<p>
+    <p>The Append dropdown defines what happens when in incoming event comes in, whether it will append passively or actively the Sensor state<p>
+   <p>The Type dropdown enables Detailed or Simplified reporting.<p>
+   <p>Detailed outputs contain a JSON object with the following parameters:<p>
+   <p><code>msg.payload.event</code></p>
+   <ul>
+   <li><code>alarmtypeindex</code> Comfort index for the alarm type</li>
+   	<li><code>status</code> [idle, trouble, alert, alarm]</li>
+   	<li><code>parametertype</code> N/A</li>
+   	<li><code>zone</code> N/A</li>
+    <li><code>id</code> N/A</li>
+    <li><code>user</code> N/A</li>
+	<li><code>notify</code> whether this is a change in value</li>
+	<li><code>timestamp</code> unix timestamp in milliseconds when the event occurred</li>
+	<li><code>previous</code> previous version of the object</li>
+	<li><code>type</code> type of metric, in this case "report"</li>
+	<li><code>element</code> event type</li>
+   </ul>	
+   <p>
+</script>
+
+<!-- Register Node Type -->
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('cytech alarm status event',{
+        category: 'Cytech',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            trigger:{value:true},
+            inputtype:{value:"passive"},
+            activewait:{value:5, required:true},
+            outputtype: {value:"detailed"},
+            outputsimplifiedkey:{value:"payload"},
+            outputmodevalue:{value:"cytechtext"}
+        },
+        color:"#f3882e",
+        inputs:0,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        // set the icon (held in icons dir below where you save the node)
+        icon: "cytech.png",     // saved in  icons/myicon.png
+        label: function() {     // sets the default label contents
+            return this.name||"Alarm Status";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        outputLabels: 'Event',
+        paletteLabel: "Alarm Status",
+        oneditprepare: function () 
+        {
+        
+       		function adjustoutputtypelist() 
+        	{
+        		var temp = $('#node-input-outputtype').val();
+        		$('#node-input-outputtype').empty();
+        		$('#node-input-outputtype').append('<option value="detailed"> Detailed</option>');
+        		if ($('#node-input-counter').val()!="*") 
+        		{
+        			$('#node-input-outputtype').append('<option value="simplified"> Simplified</option>');	
+        			$('#node-input-outputtype').val(temp);
+        		} else {
+        			$('#node-input-outputtype').val("detailed");
+        		}
+        		showsimplifiedoutput();
+        	}
+        
+        	function showsimplifiedoutput()
+        	{
+        		if ($('#node-input-outputtype').val() =="simplified")
+        		{
+        			$("#node-input-outputsimplifiedrow").show();
+        		} else {
+        			$("#node-input-outputsimplifiedrow").hide();	
+        		}
+        	}
+        	
+        	function showactivewaitrow()
+        	{
+        		
+				$('#node-input-inputtyperow').show();	
+				if ($('#node-input-inputtype').val()=="active") {
+					$("#node-input-activewaitrow").show();
+				} else {
+					$("#node-input-activewaitrow").hide();
+				}
+            	
+            }
+
+            $(document).on('change', '#node-input-outputtype', function()
+            {
+            	showsimplifiedoutput();	
+            });
+                        
+            $(document).on('change', '#node-input-inputtype', function()
+            {
+            	showactivewaitrow();
+            });  
+                   
+        }
+    });
+</script>
+
+<!-- Response Event -->
+
+<!-- Fields -->
+<script type="text/x-red" data-template-name="cytech response">
+
+    <div class="form-row">
+        <label for="node-input-response"><i class="fa fa-tag"></i> Response</label>
+        <input type="text" id="node-input-response" placeholder="Response">
+    </div>
+    
+	
+    <br/>
+    
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>    
+</script>
+
+
+<!-- Help Text -->
+<script type="text/x-red" data-help-name="cytech response">  
+   <p>Cytech Zone Event node. </p>
+   <p>Accepts an input to trigger a response. Responses may be called by name or number set in <code>msg.payload</code>.</p>
+   <p>If <code>msg.payload</code> is boolean <code>true</code> and a response has been select in the node, this will be triggered.</p>  
+</script>
+
+<!-- Register Node Type -->
+<script type="text/javascript">
+    RED.nodes.registerType('cytech response',{
+        category: 'Cytech',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            response: {value:"*", required:true}
+        },
+        color:"#f3882e",
+        inputs:1,               // set the number of inputs - only 0 or 1
+        outputs:0,              // set the number of outputs - 0 to n
+        // set the icon (held in icons dir below where you save the node)
+        icon: "cytech.png",     // saved in  icons/myicon.png
+        label: function() {     // sets the default label contents
+            return this.name||"Response: " + this.response;
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        inputLabel:'Execute',
+        paletteLabel: "Response",
+        oneditprepare: function () 
+        {
+            
+        	function searchandselectresponseid()
+        	{
+        		var current = $('#node-input-response').val();
+        		var name = $('#node-input-name').val();
+        		$('#node-input-response').replaceWith('<select id="node-input-response"></select>');
+        		$('#node-input-response').append('<option selected="selected" value="null">searching responses...</option>');
+        		$.get('cytech/config/elements', {type: "responses"})
+        		.done(function(data) {		
+        			var responses = JSON.parse(data);
+        			if(Object.keys(responses).length <=0)
+        			{
+        				RED.notify("No Responses Found","error");
+        			}
+					
+        			$('#node-input-response').empty();
+        			$('#node-input-response').append('<option value="*">All</option>');
+
+					var opts = [];
+        			for (id in responses)
+        			{
+        				opts.push({id:id,name:responses[id].name});	
+        			}
+        			opts.sort((a,b) => (a.name > b.name)? 1 : ((b.name > a.name) ? -1 : 0));
+        			opts.forEach(function(entry) {
+        				$('#node-input-response').append('<option value="' + entry.name + '">' + entry.name + '</option>');
+        			});
+
+        			// set zone value
+        			$('#node-input-response').val(current);
+        			$('#node-input-name').val(name);
+        			
+        		});	
+        	}
+        	
+        	searchandselectresponseid();
+        	
+        	$(document).on('change', '#node-input-response', function()
+            {
+                var sensorName = $('#node-input-response option:selected').text();
+                
+                if(sensorName.length > 0)
+                {
+                	if (sensorName == "All") {
+                		$('#node-input-name').val("Response Listener");	
+                	} else {
+                    	$('#node-input-name').val("Response: " + sensorName);
+                    }
+                }        
+            });
+        }
+       
+    });
+</script>
+

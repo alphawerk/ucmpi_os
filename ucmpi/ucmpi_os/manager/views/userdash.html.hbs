@@ -1,0 +1,31 @@
+{{#extend "base_layout.html"}}
+    {{#content "head" mode="append"}}
+    {{/content}}
+
+    {{#content "meta" mode="replace"}}
+        <title>UCM PI - System Info</title>
+        <meta name="description" content="UCM PI - System Info">
+    {{/content}}
+
+    {{#content "content"  mode="replace" }}
+        <h1 class="h3 mb-3">UCM/Pi System Info</h1>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">System Info</h5>
+                    </div>
+                    <div class="card-body">
+                        {{#embed "_sysInfoTable.html"}}
+                        {{/embed}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/content}}
+
+    {{#content "foot" mode="append"}}
+        <script src="../static/js/userDash.js"></script>
+    {{/content}}
+{{/extend}}
