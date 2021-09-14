@@ -6,10 +6,10 @@
 	support@alphawerk.co.uk
 */
 
-const _version = "1.1.0.3"
-const _date = "180119"
+const _version = "2.0.0.0"
+const _date = "140921"
 
-const modules = require('/home/pi/alphawerk/modules.js');
+const modules = require('/home/pi/ucmpi_os/modules.js');
 
 module.exports = {
    type: "credentials",

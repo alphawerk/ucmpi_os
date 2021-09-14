@@ -95,7 +95,7 @@ function mqtt() {
 	var _status = {};
 	var _subscriptions = new Map();
 	var _eventsubscriptions = new Map();
-	var _configpath = '/etc/alphawerk/config/';
+	var _configpath = '/etc/ucmpi_os/config/';
 	var _defaultuserfile = [];
 	const _saltrounds = 10;
 
