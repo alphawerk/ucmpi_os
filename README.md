@@ -1,6 +1,6 @@
 # ucmpi_os
 
-This is the open source repo to build the UCMPI/OS.
+This is the open source repo to build the UCMPi/OS.
 
 More information can be found here:
 
