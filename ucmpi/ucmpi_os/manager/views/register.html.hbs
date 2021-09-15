@@ -27,29 +27,7 @@
                 var query = window.location.search.substring(1);
                 var qs = parse_query_string(query);
                 console.log(query + ":" + JSON.stringify(qs));
-                if (qs.reg) {
-                    switch (qs.reg) {
-                        case '1':
-                            $("#friendlyname").attr("value", qs.serialnum);
-                            $("#friendlyname").removeAttr("disabled");
-                            $("#cloudmsg").html("Device not registered, enter friendly name below<br><br>");
-                            break;
-                        case '2':
-                            $("#friendlyname").attr("value", qs.friendlyname);
-                            $("#cloudmsg").html("Device already registered and verified<br><br>");
-                            break;
-                        case '3':
-                            $("#friendlyname").attr("value", qs.serialnum);
-                            $("#cloudmsg").html("Device already registered but unable to verify, friendly name not available<br><br>");
-                            break;
-                        case '4':
-                            $("#friendlyname").attr("value", qs.serialnum);
-                            $("#cloudmsg").html("Unable to contact cloud server, friendly name not available<br><br>");
-                            break;
-                        default:
-                    }
-                }
-
+                
                 if (qs.serialnum) {
                     $("#serial").html("Serial Number: " + qs.serialnum);
                 }
@@ -87,7 +65,7 @@
 
     {{#content "meta" mode="replace"}}
         <title>UCM PI - Register</title>
-        <meta name="description" content="UCM PI - Register">
+        <meta name="description" content="UCM PI - Initialise">
     {{/content}}
 
     {{#content "body"}}
@@ -98,7 +76,7 @@
                         <div class="d-table-cell align-middle">
 
                             <div class="text-center mt-4">
-                                <h1 class="h2">Register</h1>
+                                <h1 class="h2">Initialise</h1>
                             </div>
 
                             <div class="card">
@@ -134,29 +112,14 @@
                                                 </div>
                                             </div>
 
-                                            <div class="card">
-                                                <h5 class="card-header">Cloud Access</h5>
-                                                <div class="card-body">
-                                                    <div>
-                                                        <div id="cloudmsg"></div>
-                                                        <div class="form-group">
-                                                            <label>Name</label>
-                                                            <input class="form-control form-control-lg" type="text"
-                                                                   id="friendlyname" name="friendlyname"
-                                                                   placeholder="Enter your Friendly Name for Remote Access"/>
-                                                        </div>
-                                                        <div id="serial">Serial Number: Error</div>
-                                                        <div id="UUID">UUID: Error</div>
-                                                    </div>
-                                                </div>
-                                            </div>
+
 
                                             <div class="card">
-                                                <h5 class="card-header">Beta License</h5>
+                                                <h5 class="card-header">License Agreement</h5>
                                                 <div class="card-body">
                                                     <iframe src="../static/license.html" width="100%" height="100%"
                                                             frameborder=0></iframe>
-                                                    <input type="checkbox" name="betachk"> Accept License terms of the Beta Test<br>
+                                                    <input type="checkbox" name="betachk"> Accept terms of the License Agreement<br>
                                                 </div>
                                             </div>
 
