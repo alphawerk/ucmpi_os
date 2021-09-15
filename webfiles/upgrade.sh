@@ -56,6 +56,9 @@ cp ./ucmpi_os-main/ucmpi/absolute/etc/ucmpi_os/core/config.json /etc/ucmpi_os/co
 cp -r ./ucmpi_os-main/ucmpi/absolute/usr/lib/node_modules/node-red/* $NODEROOT/node-red/node_modules/@node-red || error_exit "Unable to copy node-red modules into place"
 cp ./ucmpi_os-main/ucmpi/absolute/home/pi/node-red\[hidden\]/* ~/.node-red || error_exit "Unable to copy node-red auth and settings modules into place"
 
+echo -e "${GREEN}Copying existing node modules from legacy to opensource location ${NC}"
+cp -r ~/alphawerk/node_modules ~/ucmpi_os/node_modules || error_exit "Unable to copy existing node-modules"
+
 echo -e "${GREEN}Starting Components ${NC}"
 cd ~/ucmpi_os || error_exit "Unable to change to home dir"
 pm2 stop all || error_warn "Unable to stop existing components"
