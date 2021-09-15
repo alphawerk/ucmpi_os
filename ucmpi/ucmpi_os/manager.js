@@ -38,7 +38,7 @@ const expressWs = require('express-ws')(app);
 
 
 const listenport = 1080;
-const configPath = '/etc/alphawerk/config';
+const configPath = '/etc/ucmpi_os/config';
 const watchdogpin = 13;
 const watchdogwarn = 12;
 const alertpin = 20;

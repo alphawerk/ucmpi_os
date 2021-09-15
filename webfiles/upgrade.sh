@@ -40,6 +40,11 @@ if test ! -d ~/alphawerk; then
     error_exit "No alphawerk directory found"
 fi
 
+if test ! -d ~/ucmpi_os; then
+    mkdir ~/ucmpi_os || error_exit "Unable to create new ucmpi_os directory"
+fi
+
+
 echo -e "${GREEN}Installing Cytech Modules ${NC}"
 echo -e "${GREEN}Getting Packages Cytech Modules ${NC}"
 # updated deployment method from github

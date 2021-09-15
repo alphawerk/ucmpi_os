@@ -47,7 +47,7 @@ var defaultConfig = {
 
 
 var _config = {};
-var configPath = '/etc/alphawerk/core/';
+var configPath = '/etc/ucmpi_os/core/';
 
 //Ensure config path exists
 configPath
