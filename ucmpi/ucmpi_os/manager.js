@@ -251,7 +251,7 @@ app.route('/register')
 
         if (modules.adduser(username,useremail,password,modules.userrights.Admin + modules.userrights['Node-Red-Write'])) {
             // register on cloud server here
-            request(registerurl + '?serialnumber=' + modules.serialNumber + '&password=' + modules.getuuid() + "&friendlyname=" + friendlyname + "&email=" + useremail, function (error, response, body) {
+            request(registerurl + '?serialnumber=' + modules.serialNumber + "&email=" + useremail, function (error, response, body) {
                 res.redirect('/login');
             });
         } else {
@@ -467,35 +467,10 @@ app.ws('/ws', function(ws, req) {
         sendUsersTable(ws);
         sendws(ws,JSON.stringify({'topic':'uuid', 'payload': modules.getuuid()}));
 
-        // get FriendlyName
-        request(friendlynameurl + '?serialnumber=' + modules.serialNumber + '&password=' + modules.getuuid(), function (error, response, body) {
-            if (error) { //todo reduce duplication or error handling
-                debug ("Unable to get FriendlyName " + error);
-                sendws(ws,JSON.stringify({'topic':'friendlyname', 'payload': {'success': 'false', 'error' : 'Unable to contact server'}}));
-            } else {
-                if (response.statusCode === 200) {
-                    sendws(ws,JSON.stringify({'topic':'friendlyname', 'payload': {'success': 'true', 'friendlyname' : body}}));
-                } else {
-                    switch (response.body) {
-                        case "Not Found":
-                            sendws(ws,JSON.stringify({'topic':'friendlyname', 'payload': {'success': 'false', 'error' : 'Not registered'}}));
-                            break;
-                        case "Error 437":
-                            sendws(ws,JSON.stringify({'topic':'friendlyname', 'payload': {'success': 'false', 'error' : 'Server offline'}}));
-                            break;
-                        case "Error 438":
-                            sendws(ws,JSON.stringify({'topic':'friendlyname', 'payload': {'success': 'false', 'error' : 'Authentication Failure'}}));
-                            break;
-                        case "Error 439":
-                            sendws(ws,JSON.stringify({'topic':'friendlyname', 'payload': {'success': 'false', 'error' : 'Server offline'}}));
-                            break;
-                        default:
-                            sendws(ws,JSON.stringify({'topic':'friendlyname', 'payload': {'success': 'false', 'error' : 'Invalid response'}}));
-                    }
-                }
-            }
-        });
-
+        sendws(ws,JSON.stringify({'topic':'friendlyname', 'payload': {'success': 'false', 'error' : 'Not supported'}}));
+        sendws(ws,JSON.stringify({'topic':'backupcomf','payload': {'status':'false'}}));
+        sendws(ws,JSON.stringify({'topic':'backupflow','payload': {'status':'false'}}));
+        sendws(ws,JSON.stringify({'topic':'diags','payload': {'status':'false'}}));
         // create subscriptions
         modules.subscribetopic("uhai/manager/watchdog", (topic,message) => {
             sendws(ws,JSON.stringify({'topic':'watchdog','payload': {'status':message.toString()}}));
@@ -521,25 +496,11 @@ app.ws('/ws', function(ws, req) {
             sendws(ws,JSON.stringify({'topic':'UCMEthTrace','payload': {'status':message.toString()}}));
         }, instanceuid + "UCMEthTrace");
 
-        modules.subscribetopic("uhai/logger/backupcomf/status", (topic,message) => {
-            sendws(ws,JSON.stringify({'topic':'backupcomf','payload': {'status':message.toString()}}));
-        }, instanceuid + "backupcomf");
-
-        modules.subscribetopic("uhai/logger/backupflow/status", (topic,message) => {
-            sendws(ws,JSON.stringify({'topic':'backupflow','payload': {'status':message.toString()}}));
-        }, instanceuid + "backupflow");
-
-        modules.subscribetopic("uhai/logger/logging/status", (topic,message) => {
-            sendws(ws,JSON.stringify({'topic':'diags','payload': {'status':message.toString()}}));
-        }, instanceuid + "logger");
 
         modules.external("UCMEth/trace/control","status");
         modules.external("UCMEth/native/control","status");
         modules.external("UCMEth/text/control","status");
 
-        modules.external("logger/logging/control","status");
-        modules.external("logger/backupcomf/control","status");
-        modules.external("logger/backupflow/control","status");
     }
 
     // updates for all users
@@ -582,9 +543,6 @@ app.ws('/ws', function(ws, req) {
             modules.unsubscribetopic(instanceuid + "UCMEthNative");
             modules.unsubscribetopic(instanceuid + "UCMEthText");
             modules.unsubscribetopic(instanceuid + "UCMEthTrace");
-            modules.unsubscribetopic(instanceuid + "backupcomf");
-            modules.unsubscribetopic(instanceuid + "backupflow");
-            modules.unsubscribetopic(instanceuid + "logger");
         }
 
         modules.unsubscribetopic(instanceuid + "system/disk");

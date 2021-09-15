@@ -186,20 +186,7 @@
  					case "userlist":
  						updateuserstable(json["payload"]);
  						break
- 					case "friendlyname":
- 						if(json["payload"]["success"] == "true") {
- 							document.getElementById("friendlyname").value = json["payload"]["friendlyname"];
- 							document.getElementById("friendlyname").disabled = false;
- 							document.getElementById("changefriendlyname").disabled = false;
- 							document.getElementById("friendlynameerror").innerHTML = "Status: OK";
 
- 							
- 						} else {
- 							document.getElementById("friendlynameerror").innerHTML = "Status: " + json["payload"]["error"];
- 							document.getElementById("friendlyname").disabled = true;
- 							document.getElementById("changefriendlyname").disabled = true;
- 						}
- 						break;
  					case "UCMEthNative":
  						if(json["payload"]["status"] == "started") {
  							document.getElementById("ucmeth").checked = true;			
@@ -219,27 +206,6 @@
  							document.getElementById("ucmtrace").checked = true;			
  						} else if (json["payload"]["status"] == "stopped") {
  							document.getElementById("ucmtrace").checked = false;		
- 						}
- 						break;	
- 					case "diags":
- 						if(json["payload"]["status"] == "started") {
- 							document.getElementById("diags").checked = true;			
- 						} else if (json["payload"]["status"] == "stopped") {
- 							document.getElementById("diags").checked = false;		
- 						}
- 						break;
- 					case "backupcomf":
- 						if(json["payload"]["status"] == "started") {
- 							document.getElementById("backupcomf").checked = true;			
- 						} else if (json["payload"]["status"] == "stopped") {
- 							document.getElementById("backupcomf").checked = false;		
- 						}
- 						break;	
- 					case "backupflow":
- 						if(json["payload"]["status"] == "started") {
- 							document.getElementById("backupflow").checked = true;			
- 						} else if (json["payload"]["status"] == "stopped") {
- 							document.getElementById("backupflow").checked = false;		
  						}
  						break;	
  					default:
@@ -292,30 +258,7 @@
  					connection.send(JSON.stringify({'topic':'UCMEthTrace','payload':{'control':'stop'}}));		
  				}
  			});
- 			
- 			$('#diags').click(function () {
- 				if($('#diags').is(':Checked')) {
- 					connection.send(JSON.stringify({'topic':'diags','payload':{'control':'start'}}));	
- 				} else {
- 					connection.send(JSON.stringify({'topic':'diags','payload':{'control':'stop'}}));		
- 				}
- 			});
- 			
- 			$('#backupcomf').click(function () {
- 				if($('#backupcomf').is(':Checked')) {
- 					connection.send(JSON.stringify({'topic':'backupcomf','payload':{'control':'start'}}));	
- 				} else {
- 					connection.send(JSON.stringify({'topic':'backupcomf','payload':{'control':'stop'}}));		
- 				}
- 			});
- 			
- 			$('#backupflow').click(function () {
- 				if($('#backupflow').is(':Checked')) {
- 					connection.send(JSON.stringify({'topic':'backupflow','payload':{'control':'start'}}));	
- 				} else {
- 					connection.send(JSON.stringify({'topic':'backupflow','payload':{'control':'stop'}}));		
- 				}
- 			});
+
     });
 
 
