@@ -123,7 +123,7 @@ sudo ln -s /usr/local/lib/nodejs/node-$NODEVERSION-$DISTRO/bin/node-red-pi /usr/
 
 echo -e "${GREEN}Preparing Destination Environment ${NC}"
 if test ! -d ~/ucmpi_os; then
-	mkdir ~/ucmpi_os || error_exit "Unable to create alphawerk home directory"
+	mkdir ~/ucmpi_os || error_exit "Unable to create ucmpi_os home directory"
 fi
 if test ! -d ~/ucmpi_os/update; then
 	mkdir ~/ucmpi_os/update || error_exit "Unable to create update directory"
@@ -173,23 +173,13 @@ fi
 mkdir ~/ucmpi_os/temp || error_exit "Unable to create temp directory"
 cd ~/ucmpi_os/temp || error_exit "Unable to change directory to temp directory"
 wget --quiet https://github.com/alphawerk/ucmpi_os/archive/refs/heads/main.zip || error_exit "Unable to download the package from github"
+unzip main.zip || error_exit "Unable to unzip the package from github"
+cp -r ./ucmpi_os-main/ucmpi/ucmpi_os/* ~/ucmpi_os || error_exit "Unable to copy core files into place"
+cp ./ucmpi_os-main/ucmpi/absolute/etc/ucmpi_os/core/config.json /etc/ucmpi_os/core/config.json || error_exit "Unable to move config.json into place"
+NODEROOT="$(npm root -g)" || error_exit "Unable to determine global nodes.js directory"
+cp -r ./ucmpi_os-main/ucmpi/absolute/usr/lib/node_modules/node-red/* $NODEROOT/node-red/node_modules/@node-red || error_exit "Unable to copy node-red modules into place"
+cp ./ucmpi_os-main/ucmpi/absolute/home/pi/node-red\[hidden\]/* ~/.node-red || error_exit "Unable to copy node-red auth and settings modules into place"
 
-cp ~/temp/ucmpi_os-main/ucmpi/absolute/etc/ucmpi_os/core/config.json /etc/ucmpi_os/core/config.json || error_exit "Unable to move config.json into place
-
-wget --quiet https://uhai.alphawerk.co.uk/scripts/core_1.1.0.tar.gz || error_exit "Cannot get core_1.1.0.tar.gz, Aborting"
-wget --quiet https://uhai.alphawerk.co.uk/scripts/node-red-home_1.1.0.tar.gz || error_exit "Cannot get node-red-home_1.1.0.tar.gz, Aborting"
-wget --quiet https://uhai.alphawerk.co.uk/scripts/node-red_1.1.0.tar.gz || error_exit "Cannot get node-red_1.1.0.tar.gz, Aborting"
-
-echo -e "${GREEN}Copying components into place ${NC}"
-
-tar -xf core_1.1.0.tar.gz -C ~ || error_exit "Cannot untar core_1.1.0.tar.gz to destination, Aborting"
-tar -xf node-red-home_1.1.0.tar.gz -C ~ || error_exit "Cannot untar node-red-home_1.1.0.tar.gz to destination, Aborting"
-sudo tar -xf node-red_1.1.0.tar.gz -C /usr/lib/node_modules || error_exit "Cannot untar node-red_1.1.0.tar.gz to destination, Aborting"
-
-echo -e "${GREEN}Cleaning up ${NC}"
-rm core_1.1.0.tar.gz || error_exit "Unable to remove tar"
-rm node-red-home_1.1.0.tar.gz || error_exit "Unable to remove tar"
-rm node-red_1.1.0.tar.gz || error_exit "Unable to remove tar"
 
 echo -e "${GREEN}Installing Node-Red Modules${NC}"
 pm2 start node-red
@@ -198,13 +188,13 @@ cd ~/.node-red || error_exit "Unable to change directory to ~/.node-red"
 npm install --save --silent node-red-dashboard || error_exit "Unable to install node-red-dashboard"
 
 echo -e "${GREEN}Starting Components ${NC}"
-cd ~/alphawerk || error_exit "Unable to change to home dir"
+cd ~/ucmpi_os || error_exit "Unable to change to home dir"
 pm2 stop all || error_warn "Unable to stop existing components"
-pm2 start core.js logger.js configuration.js UCMEth.js netserver.js manager.js node-red || error_exit "Unable to start components"
+pm2 start core.js configuration.js UCMEth.js manager.js node-red || error_exit "Unable to start components"
 #pm2 list
 pm2 save  || error_exit "Unable to save pm2 start up script"
 
-touch ~/alphawerk/QuickStart$SCRIPTVERSION || error_warn "Unable to write script marker"
+touch ~/ucmpi_os/install_$SCRIPTVERSION || error_warn "Unable to write script marker"
 echo -e "${RED}All Done!!"
 echo -e "${GREEN}You may now connect to HTTP:${LOCALIP}:1080 to access the management console and HTTP://${LOCALIP}:1880 to access Node-Red ${NC}"
 echo -e "${GREEN}You will need to create a user account in the management console before accessing Node-Red ${NC}"
