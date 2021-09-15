@@ -53,6 +53,7 @@ cp ./ucmpi_os-main/ucmpi/absolute/home/pi/node-red\[hidden\]/* ~/.node-red || er
 echo -e "${GREEN}Starting Components ${NC}"
 cd ~/ucmpi_os || error_exit "Unable to change to home dir"
 pm2 stop all || error_warn "Unable to stop existing components"
+pm2 delete all || error_warn "Unable to delete existing components"
 pm2 start core.js configuration.js UCMEth.js manager.js node-red || error_exit "Unable to start components"
 #pm2 list
 pm2 save  || error_exit "Unable to save pm2 start up script"

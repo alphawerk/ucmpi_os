@@ -59,6 +59,7 @@ cp ./ucmpi_os-main/ucmpi/absolute/home/pi/node-red\[hidden\]/* ~/.node-red || er
 echo -e "${GREEN}Starting Components ${NC}"
 cd ~/ucmpi_os || error_exit "Unable to change to home dir"
 pm2 stop all || error_warn "Unable to stop existing components"
+pm2 delete all || error_warn "Unable to delete existing components"
 
 rm -r $NODEROOT/node-red/node_modules/@node-red/nodes/alphawerk || error_warn "Unable to delete legacy node-red modules"
 sudo rm -r /etc/alphawerk || error_warn "Unable to delete legacy configuration variables"
