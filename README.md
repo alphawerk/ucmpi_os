@@ -39,4 +39,4 @@ The hardware is supported by [Cytech](http://www.cytech.biz) & [alphaWerk](http:
 
 There is a [forum](http://www.comfortforums.com/forum138/) for support
 
-Copyright (c) alphaWerk 2018,2019,2020,2021 
+Copyright (c)  2018,2019,2020,2021 alphaWerk Ltd
