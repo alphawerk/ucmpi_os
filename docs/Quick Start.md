@@ -58,7 +58,7 @@ dtparam=uart0=on
 execute the following command
 
 ```
-curl -sL https://uhai.alphawerk.co.uk/scripts/quickstart | bash -
+curl -sL https://raw.githubusercontent.com/alphawerk/ucmpi_os/main/webfiles/install.sh | bash -
 ```
 
 ## All Done
