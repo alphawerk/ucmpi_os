@@ -2,11 +2,11 @@
 
 This is the open source repo to build the UCMPi/OS.
 
-## Whas this all about
+## What's this all about
 
-alphaWerk and Cytech collabored in the development of a UCM for the Comfort range of Alarm / Home Automation systems to embed a Raspberry Pi.
+alphaWerk and Cytech collaborated in the development of a UCM for the Comfort range of Alarm / Home Automation systems to embed a Raspberry Pi.
 
-This repo is an open source licesed version of the original Beta software which is now being retired in favour of this new open source version
+This repo is an open source licensed version of the original Beta software which is now being retired in favour of this new open source version.
 
 More information can be found here:
 
@@ -14,7 +14,7 @@ More information can be found here:
 
 ## Installation
 
-If you are upgrading from an existing alphaWerk beta version, the following command can be used to faciliate the migration: 
+If you are upgrading from an existing alphaWerk beta version, the following command can be used to facilitate the migration: 
 ```
 curl -sL https://raw.githubusercontent.com/alphawerk/ucmpi_os/main/webfiles/upgrade.sh | bash -
 ```
@@ -31,7 +31,7 @@ curl -sL https://raw.githubusercontent.com/alphawerk/ucmpi_os/main/webfiles/inst
 
 ## Further Information ##
 
-This repo is maintained by alphaWerk but it is open source as per the [GNU GENERAL PUBLIC LICENSE](https://github.com/alphawerk/ucmpi_os/blob/main/LICENSE). we welcome contributions from users.
+This repo is maintained by alphaWerk but it is open source as per the [GNU GENERAL PUBLIC LICENSE](https://github.com/alphawerk/ucmpi_os/blob/main/LICENSE). We welcome contributions from users.
 
 ## Useful Links ##
 
