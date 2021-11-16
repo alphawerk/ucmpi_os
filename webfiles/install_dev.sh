@@ -2,7 +2,7 @@
 # Quickstart Script for UCM/Pi Node-Red Installation
 # (c) 2019,2020,2021 alphaWerk Ltd
 
-SCRIPTVERSION=2.1.0.3
+SCRIPTVERSION=2.1.0.4
 NODEVERSION=v16.13.0
 DISTRO="linux-$(uname -m)"
 LOCALIP="$(hostname -I | xargs)"
@@ -160,7 +160,7 @@ if test -f /etc/mosquitto/conf.d/localhost.conf; then
 	sudo rm /etc/mosquitto/conf.d/localhost.conf || error_exit "Unable to delete old mosquitto configuration"
 fi
 sudo service mosquitto start || error_exit "Unable to start mosquitto"
-echo "bind_address localhost" | sudo tee /etc/mosquitto/conf.d/localhost.conf > /dev/null 2>&1|| error_exit "Unable to write mosquitto configuration"
+echo "bind_address 127.0.0.1" | sudo tee /etc/mosquitto/conf.d/localhost.conf > /dev/null 2>&1|| error_exit "Unable to write mosquitto configuration"
 sudo service mosquitto restart || error_exit "Unable to restart mosquitto"
 
 
