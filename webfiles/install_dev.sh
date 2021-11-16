@@ -2,7 +2,7 @@
 # Quickstart Script for UCM/Pi Node-Red Installation
 # (c) 2019,2020,2021 alphaWerk Ltd
 
-SCRIPTVERSION=2.1.0.0
+SCRIPTVERSION=2.1.0.1
 NODEVERSION=v16.13.0
 DISTRO="linux-$(uname -m)"
 LOCALIP="$(hostname -I | xargs)"
