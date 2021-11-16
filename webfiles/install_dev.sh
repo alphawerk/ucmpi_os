@@ -147,8 +147,8 @@ if test ! -d /etc/ucmpi_os/core; then
 	mkdir /etc/ucmpi_os/core || error_exit "Unable to create ucmpi_os/core config directory"
 fi
 
-if test ! -d /usr/lib/node_modules/node-red/nodes/ucmpi_os; then
-	sudo mkdir /usr/lib/node_modules/node-red/nodes/ucmpi_os || error_exit "Unable to create cytech node directory"
+if test ! -d /usr/lib/node_modules/node-red/node_modules/@node-red/nodes/ucmpi_os; then
+	sudo mkdir /usr/lib/node_modules/node-red/node_modules/@node-red/nodes/ucmpi_os || error_exit "Unable to create cytech node directory"
 fi
 
 echo -e "${GREEN}Installing dependancies ${NC}"
