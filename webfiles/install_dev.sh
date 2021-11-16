@@ -2,7 +2,7 @@
 # Quickstart Script for UCM/Pi Node-Red Installation
 # (c) 2019,2020,2021 alphaWerk Ltd
 
-SCRIPTVERSION=2.1.0.1
+SCRIPTVERSION=2.1.0.2
 NODEVERSION=v16.13.0
 DISTRO="linux-$(uname -m)"
 LOCALIP="$(hostname -I | xargs)"
@@ -177,7 +177,7 @@ unzip main.zip || error_exit "Unable to unzip the package from github"
 cp -r ./ucmpi_os-main/ucmpi/ucmpi_os/* ~/ucmpi_os || error_exit "Unable to copy core files into place"
 cp ./ucmpi_os-main/ucmpi/absolute/etc/ucmpi_os/core/config.json /etc/ucmpi_os/core/config.json || error_exit "Unable to move config.json into place"
 NODEROOT="$(npm root -g)" || error_exit "Unable to determine global nodes.js directory"
-cp -r ./ucmpi_os-main/ucmpi/absolute/usr/lib/node_modules/node-red/* $NODEROOT/node-red/node_modules/@node-red || error_exit "Unable to copy node-red modules into place"
+sudo cp -r ./ucmpi_os-main/ucmpi/absolute/usr/lib/node_modules/node-red/* $NODEROOT/node-red/node_modules/@node-red || error_exit "Unable to copy node-red modules into place"
 cp ./ucmpi_os-main/ucmpi/absolute/home/pi/node-red\[hidden\]/* ~/.node-red || error_exit "Unable to copy node-red auth and settings modules into place"
 
 
