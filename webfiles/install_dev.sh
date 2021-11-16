@@ -2,7 +2,7 @@
 # Quickstart Script for UCM/Pi Node-Red Installation
 # (c) 2019,2020,2021 alphaWerk Ltd
 
-SCRIPTVERSION=2.1.0.4
+SCRIPTVERSION=2.1.0.5
 NODEVERSION=v16.13.0
 DISTRO="linux-$(uname -m)"
 LOCALIP="$(hostname -I | xargs)"
@@ -157,10 +157,14 @@ npm install epoll mqtt serialport mitt xml2js bcrypt express express-ws express-
 echo -e "${GREEN}Installing mosquitto ${NC}"
 sudo apt-get install -qq -y mosquitto > /dev/null 2>&1|| error_exit "Unable to install mosquitto"
 if test -f /etc/mosquitto/conf.d/localhost.conf; then
-	sudo rm /etc/mosquitto/conf.d/localhost.conf || error_exit "Unable to delete old mosquitto configuration"
+	sudo rm /etc/mosquitto/conf.d/localhost.conf || error_exit "Unable to delete old mosquitto network configuration"
+fi
+if test -f /etc/mosquitto/conf.d/auth.conf; then
+	sudo rm /etc/mosquitto/conf.d/auth.conf || error_exit "Unable to delete old mosquitto authentication configuration"
 fi
 sudo service mosquitto start || error_exit "Unable to start mosquitto"
-echo "bind_address 127.0.0.1" | sudo tee /etc/mosquitto/conf.d/localhost.conf > /dev/null 2>&1|| error_exit "Unable to write mosquitto configuration"
+echo "bind_address 127.0.0.1" | sudo tee /etc/mosquitto/conf.d/localhost.conf > /dev/null 2>&1|| error_exit "Unable to write mosquitto network configuration"
+echo "allow_anonymous true" | sudo tee /etc/mosquitto/conf.d/auth.conf > /dev/null 2>&1|| error_exit "Unable to write mosquitto authentication configuration"
 sudo service mosquitto restart || error_exit "Unable to restart mosquitto"
 
 
