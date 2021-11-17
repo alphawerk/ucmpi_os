@@ -14,9 +14,9 @@ More information can be found here:
 
 ## Installation
 
-If you are upgrading from an existing alphaWerk beta version, the following command can be used to facilitate the migration: 
+For fresh installations, the following command will install the open source version, as per the instructions above:
 ```
-curl -sL https://raw.githubusercontent.com/alphawerk/ucmpi_os/main/webfiles/upgrade.sh | bash -
+curl -sL https://raw.githubusercontent.com/alphawerk/ucmpi_os/main/webfiles/install.sh | bash -
 ```
 
 If you are already running the open source version and wish to use the latest and greatest main version, the following will update:
@@ -24,9 +24,9 @@ If you are already running the open source version and wish to use the latest an
 curl -sL https://raw.githubusercontent.com/alphawerk/ucmpi_os/main/webfiles/update.sh | bash -
 ```
 
-For fresh installations, the following command will install the open source version, as per the instructions above:
+If you are upgrading from an existing **alphaWerk** beta version, the following command can be used to facilitate the migration: 
 ```
-curl -sL https://raw.githubusercontent.com/alphawerk/ucmpi_os/main/webfiles/install.sh | bash -
+curl -sL https://raw.githubusercontent.com/alphawerk/ucmpi_os/main/webfiles/upgrade.sh | bash -
 ```
 
 ## Further Information ##
@@ -38,5 +38,7 @@ This repo is maintained by alphaWerk but it is open source as per the [GNU GENER
 The hardware is supported by [Cytech](http://www.cytech.biz) & [alphaWerk](http://www.alphawerk.co.uk).
 
 There is a [forum](http://www.comfortforums.com/forum138/) for support
+
+If you wish to join the slack group, please send an email to matt@alphawerk.co.uk
 
 Copyright (c)  2018,2019,2020,2021 alphaWerk Ltd
