@@ -44,6 +44,13 @@ if test ! -d ~/ucmpi_os; then
     mkdir ~/ucmpi_os || error_exit "Unable to create new ucmpi_os directory"
 fi
 
+if test ! -d /etc/ucmpi_os; then
+    sudo mkdir /etc/ucmpi_os || error_exit "Unable to create new /etc/ucmpi_os directory"
+fi
+
+if test ! -d /etc/ucmpi_os/core; then
+    sudo mkdir /etc/ucmpi_os/core || error_exit "Unable to create new /etc/ucmpi_os directory"
+fi
 
 echo -e "${GREEN}Installing Cytech Modules ${NC}"
 echo -e "${GREEN}Getting Packages Cytech Modules ${NC}"
@@ -56,7 +63,7 @@ cd ~/ucmpi_os/temp || error_exit "Unable to change directory to temp directory"
 wget --quiet https://github.com/alphawerk/ucmpi_os/archive/refs/heads/main.zip || error_exit "Unable to download the package from github"
 unzip main.zip || error_exit "Unable to unzip the package from github"
 cp -r ./ucmpi_os-main/ucmpi/ucmpi_os/* ~/ucmpi_os || error_exit "Unable to copy core files into place"
-cp ./ucmpi_os-main/ucmpi/absolute/etc/ucmpi_os/core/config.json /etc/ucmpi_os/core/config.json || error_exit "Unable to move config.json into place"
+sudo cp ./ucmpi_os-main/ucmpi/absolute/etc/ucmpi_os/core/config.json /etc/ucmpi_os/core/config.json || error_exit "Unable to move config.json into place"
 
 cp -r ./ucmpi_os-main/ucmpi/absolute/usr/lib/node_modules/node-red/* $NODEROOT/node-red/node_modules/@node-red || error_exit "Unable to copy node-red modules into place"
 cp ./ucmpi_os-main/ucmpi/absolute/home/pi/node-red\[hidden\]/* ~/.node-red || error_exit "Unable to copy node-red auth and settings modules into place"
