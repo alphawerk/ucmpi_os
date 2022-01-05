@@ -872,11 +872,11 @@ function function_button(delta) {
 			if (error) {
 				//console.log('It went wrong');
 				// changed res -> response
-				response.send({status: 'error', error: err});
+				//response.send({status: 'error', error: err});
 				key = tempkey;
 				modules.sendretain(('key'),key);
 				// changed res -> response
-				response.send({redirect:'/'});
+				//response.send({redirect:'/'});
 			} else {
 				//console.log('Response ' + response)
 				//console.log('Body' + body);
