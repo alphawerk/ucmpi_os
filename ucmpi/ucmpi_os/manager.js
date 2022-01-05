@@ -873,8 +873,8 @@ function function_button(delta) {
 				//console.log('It went wrong');
 				// changed res -> response
 				//response.send({status: 'error', error: err});
-				key = tempkey;
-				modules.sendretain(('key'),key);
+				//key = tempkey;
+				//modules.sendretain(('key'),key);
 				// changed res -> response
 				//response.send({redirect:'/'});
 			} else {
