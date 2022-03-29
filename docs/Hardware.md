@@ -13,7 +13,7 @@
 
 ## Setting up the hardware
 
-1. Download a pre-built operating system image with the necessary hardware changes [here](http://gofile.me/5j6S4/V2t7L3eef).
+1. Download a pre-built operating system image with the necessary hardware changes [here](http://gofile.me/5j6S4/n5t7R6qPi).
 
 2. Flash the CM3/CM3+ with downloaded image. You can use [this guide](https://www.raspberrypi.org/documentation/hardware/computemodule/cm-emmc-flashing.md) to flashing the Compute Module (CM3/CM3+). 
 
