@@ -152,7 +152,7 @@ if test ! -d /usr/lib/node_modules/node-red/node_modules/@node-red/nodes/ucmpi_o
 fi
 
 echo -e "${GREEN}Installing dependancies ${NC}"
-npm install epoll mqtt serialport mitt xml2js bcrypt express express-ws express-handlebars@3.0.0 express-handlebars-layouts express-session memorystore body-parser cookie-parser request express-fileupload xml2js fs-extra path uid-safe https rpi-gpio os child_process > /dev/null 2>&1|| error_exit "Error installing dependancies"
+npm install epoll mqtt serialport@9.2.7 mitt xml2js bcrypt express express-ws express-handlebars@3.0.0 express-handlebars-layouts express-session memorystore body-parser cookie-parser request express-fileupload xml2js fs-extra path uid-safe https rpi-gpio os child_process > /dev/null 2>&1|| error_exit "Error installing dependancies"
 
 echo -e "${GREEN}Installing mosquitto ${NC}"
 sudo apt-get install -qq -y mosquitto > /dev/null 2>&1|| error_exit "Unable to install mosquitto"
