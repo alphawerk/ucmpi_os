@@ -25,7 +25,7 @@ If not please take a look at [Installing the hardware](Hardware.md)
 
 ## Configuring the Operating System
 
-NB You can skip down to 'Installing Node-Red and the alphaWerk components' if you used the [prepared OS image](https://uhai.alphawerk.co.uk/scripts/cm_alphawerk.img.zip) provided by alphaWerk when flashing the device. 
+NB You can skip down to 'Installing Node-Red and the alphaWerk components' if you used the [prepared OS image](http://gofile.me/5j6S4/1pxPFapjh) provided by alphaWerk when flashing the device. 
 
 ### Enable the serial port 
 
