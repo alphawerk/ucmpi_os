@@ -2,7 +2,7 @@
 # Quickstart Script for UCM/Pi Node-Red Update
 # (c) 2019,2020,2021 alphaWerk Ltd
 
-SCRIPTVERSION=2.0.0.2
+SCRIPTVERSION=2.0.0.3
 DISTRO="linux-$(uname -m)"
 LOCALIP="$(hostname -I | xargs)"
 
