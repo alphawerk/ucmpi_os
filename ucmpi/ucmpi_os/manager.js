@@ -6,8 +6,8 @@
 	support@alphawerk.co.uk
 */
 
-const _version = "2.0.0.0"
-const _date = "100921"
+const _version = "2.0.0.1"
+const _date = "200722"
 
 const express = require('express');
 const exphbs = require('express-handlebars');
@@ -700,7 +700,7 @@ if (req.session.admin) {
 				break;
 			case "remotescript":
 				debug("request to execute remote script " + msg['payload']['remotescript']);
-				request("https://uhai.alphawerk.co.uk/" + msg['payload']['remotescript'], function (error, response, body) {
+				request(msg['payload']['remotescript'], function (error, response, body) {
 					if (error) {
 						sendws(ws,JSON.stringify({'topic':'message','payload': {'status':"Unable to get remote script " + error}}));
 						debug("Unable to get remote script " + error);
