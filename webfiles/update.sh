@@ -35,7 +35,7 @@ echo -e "${GREEN}Distro ${DISTRO} Script Version ${SCRIPTVERSION} Local IP ${LOC
 
 echo -e "${GREEN}Updating Node-Red${NC}"
 # update node-red via npm
-sudo npm -g update node-red
+sudo npm -g install node-red@^3.x.x
 
 echo -e "${GREEN}Installing Cytech Modules ${NC}"
 echo -e "${GREEN}Getting Packages Cytech Modules ${NC}"
