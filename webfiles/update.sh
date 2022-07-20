@@ -2,7 +2,7 @@
 # Quickstart Script for UCM/Pi Node-Red Update
 # (c) 2019,2020,2021 alphaWerk Ltd
 
-SCRIPTVERSION=2.0.0.1
+SCRIPTVERSION=2.0.0.2
 DISTRO="linux-$(uname -m)"
 LOCALIP="$(hostname -I | xargs)"
 
@@ -33,7 +33,7 @@ no_npm()
 echo -e "${GREEN}Starting UCM/Pi Node-Red Update${NC}"
 echo -e "${GREEN}Distro ${DISTRO} Script Version ${SCRIPTVERSION} Local IP ${LOCALIP}"
 
-echo -e "${GREEN}Updateding Node-Red${NC}"
+echo -e "${GREEN}Updating Node-Red${NC}"
 # update node-red via npm
 sudo npm -g update node-red
 
