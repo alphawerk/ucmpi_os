@@ -3,7 +3,6 @@
 # (c) 2019,2020,2021 alphaWerk Ltd
 
 SCRIPTVERSION=2.0.0.1
-NODEVERSION=v10.16.0
 DISTRO="linux-$(uname -m)"
 LOCALIP="$(hostname -I | xargs)"
 
@@ -33,6 +32,10 @@ no_npm()
 
 echo -e "${GREEN}Starting UCM/Pi Node-Red Update${NC}"
 echo -e "${GREEN}Distro ${DISTRO} Script Version ${SCRIPTVERSION} Local IP ${LOCALIP}"
+
+echo -e "${GREEN}Updateding Node-Red${NC}"
+# update node-red via npm
+sudo npm -g update node-red
 
 echo -e "${GREEN}Installing Cytech Modules ${NC}"
 echo -e "${GREEN}Getting Packages Cytech Modules ${NC}"
