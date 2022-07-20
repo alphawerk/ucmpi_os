@@ -6,7 +6,7 @@
 	support@alphawerk.co.uk
 */
 
-const _version = "2.0.0.1"
+const _version = "2.0.0.2"
 const _date = "200722"
 
 const express = require('express');
@@ -708,21 +708,21 @@ if (req.session.admin) {
 					if (response.statusCode = 200) {
 						try {
 							debug("removing update dir in case it exists");
-							fs.removeSync("/home/pi/alphawerk/update");
+							fs.removeSync("/home/pi/ucmpi_os/update");
 						} catch (error) {
 							debug("didn't remove update dir because " + error);
 						}
 						try {
 							debug("Creating update dir");
-							fs.mkdirSync("/home/pi/alphawerk/update");
+							fs.mkdirSync("/home/pi/ucmpi_os/update");
 							debug("Writing script to disk");
-							fs.writeFileSync("/home/pi/alphawerk/update/update.sh", body, {mode: 0o777});
+							fs.writeFileSync("/home/pi/ucmpi_os/update/update.sh", body, {mode: 0o777});
 							debug("Executing script");
-							var result = cp.execFileSync("/home/pi/alphawerk/update/update.sh", {stderr: "stdio"});
+							var result = cp.execFileSync("/home/pi/ucmpi_os/update/update.sh", {stderr: "stdio"});
 							debug("Script output " + result);
 							sendws(ws,JSON.stringify({'topic':'message','payload': {'status':"Script executed:" + result}}));
 							debug("Deleting temporary folder");
-							fs.removeSync("/home/pi/alphawerk/update");
+							fs.removeSync("/home/pi/ucmpi_os/update");
 						} catch (error) {
 							sendws(ws,JSON.stringify({'topic':'message','payload': {'status':"Error executing script:" + error}}));
 							debug("Error executing script  " + error);
