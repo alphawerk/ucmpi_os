@@ -108,7 +108,7 @@ echo -e "${GREEN}configuring pm2${NC}"
 pm2 startup | tail -1 | sudo -E bash - > /dev/null 2>&1 || error_exit "Unable to configure pm2 to start at boot"
 
 echo -e "${GREEN}Installing Node-Red${NC}"
-sudo npm install --silent -g --unsafe-perm node-red@2.1.3 > /dev/null 2>&1 || error_exit "Unable to install node-red"
+sudo npm install --silent -g --unsafe-perm node-red@3.0.0 > /dev/null 2>&1 || error_exit "Unable to install node-red"
 sudo npm install --silent -g mqtt > /dev/null 2>&1 || error_exit "Unable to install mqtt"
 
 if test -h /usr/bin/node-red; then
