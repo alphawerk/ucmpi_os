@@ -32,5 +32,5 @@ If you wish to share device status and control between Home-Assistant and Comfor
 3. Deploy the flow and then initiate discovery by pressing clicking on the 'Disovery Nodes' Node in the newly create Home-Assistant tab.
 
 5. You should now find all yours Zones, Outputs, Flags, Counters and Sensors and the Alarm exposed in Home-Assistant, whcih will both update status and can be controlled (where possible) from Home-Assistant.
-6. 5. You may need to update the MQTT broker settings in the flow for your local MQTT server.
+6. You may need to update the MQTT broker settings in the flow for your local MQTT server.
 
